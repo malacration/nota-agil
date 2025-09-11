@@ -5,7 +5,7 @@ on:
     types: [ created ]
 
 env:
-  FULL_IMAGE_NAME: malacration/sap-service
+  FULL_IMAGE_NAME: malacration/nota-agil
 
 jobs:
   push_to_registry:
