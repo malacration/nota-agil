@@ -4,12 +4,15 @@ import br.andrew.nota.agil.model.Duplicata
 import br.andrew.nota.agil.model.Task
 import br.andrew.nota.agil.model.TaskStatus
 import br.andrew.nota.agil.model.TaskTypes
+import br.andrew.nota.agil.qive.infrastructure.QiveConfiguration
 import br.andrew.nota.agil.repository.TaskRepository
 import br.andrew.nota.agil.softexpert.service.WorkFlowEnvrioment
 import br.andrew.nota.agil.softexpert.service.WorkFlowService
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
 
 @Service
+@EnableConfigurationProperties(WorkFlowEnvrioment::class)
 class TaskService(
     //TODO colocar id do processo no construtor
     val flow: WorkFlowEnvrioment,

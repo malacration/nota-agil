@@ -2,7 +2,9 @@ package br.andrew.nota.agil.infrastructure
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
+import org.springframework.stereotype.Component
 
+@Component
 @Configuration
 class SoftExpertEnvrioment(
     @Value("\${soft.expert.host:windson}") val host : String,
