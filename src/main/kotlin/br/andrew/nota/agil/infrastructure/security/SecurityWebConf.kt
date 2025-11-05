@@ -11,7 +11,9 @@ import org.springframework.security.web.DefaultSecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
-class SecurityWebConf {
+class SecurityWebConf(
+    private val corsConfig: CorsConfig
+) {
 
     @Bean
     fun authorizationRequestRepository(http : HttpSecurity): DefaultSecurityFilterChain {
@@ -19,7 +21,7 @@ class SecurityWebConf {
             .csrf {
                 it.disable()
             }
-            .cors(CorsConfig().customizer)
+            .cors(corsConfig.customizer)
             .authorizeHttpRequests {
                 it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 it.anyRequest().permitAll()
