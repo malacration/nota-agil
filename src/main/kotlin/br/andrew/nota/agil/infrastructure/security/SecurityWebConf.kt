@@ -6,12 +6,13 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.DefaultSecurityFilterChain
+import org.springframework.web.cors.CorsConfigurationSource
 
 
 @Configuration
 @EnableWebSecurity
 class SecurityWebConf(
-    private val corsConfig: CorsConfig
+    private val corsConfigurationSource: CorsConfigurationSource
 ) {
 
     @Bean
@@ -20,7 +21,7 @@ class SecurityWebConf(
             .csrf {
                 it.disable()
             }
-            .cors(corsConfig.customizer)
+            .cors { it.configurationSource(corsConfigurationSource) }
             .authorizeHttpRequests {
                 it.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 it.anyRequest().permitAll()
