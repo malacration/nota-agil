@@ -1,62 +1,57 @@
 package br.andrew.nota.agil.infrastructure.security
 
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.config.Customizer;
+import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer
+import org.springframework.core.Ordered
 import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-
+import org.springframework.web.filter.CorsFilter
 
 @Configuration
-class CorsConfig(@Value("\${cors.origins:http://localhost:4200}") val corsAppendAllow : List<String> = arrayListOf()) {
+class CorsConfig(
+    @Value("\${cors.origins:http://localhost:4200}") private val corsOrigins: List<String> = emptyList()
+) {
 
-    val allowedOrigins = mutableListOf(
-        "http://localhost:[*]",
-        "http://localhost:4200/",
-        "http://localhost:4200",
-        "http://*localhost:[*]",
-        "http://172.18.30.147:4200/*",
-        "http://172.18.30.147:4200",
-        "http://172.18.30.147:4200/"
-    ).also {
-        it.addAll(corsAppendAllow)
+    private val allowedOriginPatterns = buildList {
+        add("*")
+        addAll(corsOrigins.filter { it.isNotBlank() })
     }
 
-    val allowedMethods = mutableListOf("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH")
-
-    val allowedHeaders = mutableListOf("Authorization",
-        "Cache-Control",
-        "Content-Type",
-        "cache",
-        "pragma",
-        "traceparent",
-        "tracestate")
-
-    val exposedHeaders = mutableListOf(
+    private val allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+    private val allowedHeaders = listOf("*")
+    private val exposedHeaders = listOf(
         "Authorization",
         "error",
         "arquivo",
         "info",
         "cache",
-        "Content-Type")
+        "Content-Type"
+    )
 
-    fun getCorsConfig(): CorsConfiguration {
-        val configuration = CorsConfiguration()
-        configuration.allowedOrigins = allowedOrigins
-        configuration.allowedMethods = allowedMethods
-        configuration.allowedHeaders = allowedHeaders
-        configuration.exposedHeaders = exposedHeaders
-        configuration.allowCredentials = true
-        return configuration
-    }
+    private fun newCorsConfiguration(): CorsConfiguration =
+        CorsConfiguration().apply {
+            allowedOriginPatterns = this@CorsConfig.allowedOriginPatterns
+            allowedMethods = this@CorsConfig.allowedMethods
+            allowedHeaders = this@CorsConfig.allowedHeaders
+            exposedHeaders = this@CorsConfig.exposedHeaders
+            allowCredentials = true
+        }
 
-    val customizer: Customizer<CorsConfigurer<HttpSecurity>> =
-        Customizer { cors ->
-            val source = UrlBasedCorsConfigurationSource().apply {
-                registerCorsConfiguration("/**", getCorsConfig())
-            }
-            cors.configurationSource(source)
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource =
+        UrlBasedCorsConfigurationSource().apply {
+            registerCorsConfiguration("/**", newCorsConfiguration())
+        }
+
+    @Bean
+    fun corsFilterBean(
+        @Qualifier("corsConfigurationSource") source: CorsConfigurationSource
+    ): FilterRegistrationBean<CorsFilter> =
+        FilterRegistrationBean(CorsFilter(source)).apply {
+            order = Ordered.HIGHEST_PRECEDENCE
         }
 }
