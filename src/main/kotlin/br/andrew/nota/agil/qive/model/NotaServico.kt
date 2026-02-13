@@ -1,6 +1,7 @@
 package br.andrew.nota.agil.qive.model
 
 import br.andrew.nota.agil.model.Duplicata
+import br.andrew.nota.agil.model.TipoDuplicata
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -29,6 +30,7 @@ data class NotaServico(
             getValorBruto() ?:  throw Exception("erro ao obter valor Bruto"),
             getValorLiquido() ?: throw Exception("Erro ao pegar valor liquido"),
             getNumero() ?: throw Exception("Erro ao pegar numero da nota"),
+            TipoDuplicata.Nfse
         )
     }
 

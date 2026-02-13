@@ -10,13 +10,6 @@ class WorkFlowService(
     val wsdl : WorkflowPortType
 ) {
 
-    fun teste(){
-        val resultado = wsdl.getWorkflow(GetWorkflowRequestType().also {
-            it.workflowID = "FXP-N000430"
-        })
-        println(resultado)
-    }
-
     fun instanciaFluxo(idProcess : String,
                        title : String,
                        data : Map<String,Map<String,String>> = mapOf()) : NewWorkflowEditDataResponseType {

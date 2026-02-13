@@ -1,6 +1,7 @@
 package br.andrew.nota.agil.scheduling.core
 
 import br.andrew.nota.agil.controllers.JobStatus
+import br.andrew.nota.agil.infrastructure.JobsConfiguration
 import br.andrew.nota.agil.model.Company
 import br.andrew.nota.agil.model.JobState
 import br.andrew.nota.agil.model.JobsTypes
@@ -17,6 +18,7 @@ abstract class ScheduledAbstract(
     val company : Company,
     val jobsTypes : JobsTypes,
     val jobStateRepository: JobStateRepository,
+    private val jobsConfiguration: JobsConfiguration,
     initialPeriod: Duration = Duration.ofSeconds(60),
     initialMode: Mode = Mode.FIXED_RATE
 ) {
@@ -34,11 +36,14 @@ abstract class ScheduledAbstract(
 
 
     init {
-        start()
+        val state = getJobState()
+        if (state.enabled && !jobsConfiguration.disableAll) start()
     }
 
     @Synchronized
     fun start(initialDelay: Duration = period) {
+        if (jobsConfiguration.disableAll) return
+        updateEnabled(true)
         if (isRunning()) return
         future = scheduleInternal(initialDelay)
     }
@@ -47,6 +52,7 @@ abstract class ScheduledAbstract(
     fun stop() {
         future?.cancel(false)
         future = null
+        updateEnabled(false)
     }
 
     fun runOnce() = tick()
@@ -100,6 +106,7 @@ abstract class ScheduledAbstract(
     }
 
     protected fun tick() {
+        if (jobsConfiguration.disableAll) return
         try { doWork() } finally { markRun() }
     }
 
@@ -122,6 +129,13 @@ abstract class ScheduledAbstract(
         return jobStateRepository
             .findByEmpresaAndTipo(company.cnpj,jobsTypes)
             ?: jobStateRepository.save(JobState(company.cnpj,jobsTypes))
+    }
+
+    private fun updateEnabled(enabled: Boolean) {
+        val state = getJobState()
+        if (state.enabled == enabled) return
+        state.enabled = enabled
+        jobStateRepository.save(state)
     }
 
     /** Sobrescreva se quiser logar/tratar erros. */

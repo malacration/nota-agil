@@ -13,6 +13,7 @@ import java.time.Instant
 data class JobState(
     val empresa: String,
     val tipo: JobsTypes,
+    var enabled: Boolean = false,
     var cursor: Int = 0,
     var lastFrom: Instant = JobDefaults.BOOTSTRAP_FROM,
 ){

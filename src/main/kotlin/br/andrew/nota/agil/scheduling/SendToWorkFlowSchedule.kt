@@ -7,6 +7,7 @@ import br.andrew.nota.agil.repository.JobStateRepository
 import br.andrew.nota.agil.repository.TaskRepository
 import br.andrew.nota.agil.scheduling.core.ScheduledAbstract
 import br.andrew.nota.agil.services.TaskService
+import br.andrew.nota.agil.infrastructure.JobsConfiguration
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.stereotype.Component
 import java.time.Duration
@@ -16,17 +17,15 @@ import java.time.Duration
 class SendToWorkFlowSchedule(
     task : TaskScheduler,
     jobStateRepository: JobStateRepository,
+    jobsConfiguration: JobsConfiguration,
     val taskRepository: TaskRepository,
     val taskService: TaskService) : ScheduledAbstract(
     task,
     Company("all", "all"),
     JobsTypes.SendWorkFlow,
     jobStateRepository,
+    jobsConfiguration,
     Duration.ofMinutes(5)){
-
-    init {
-        this.stop()
-    }
 
     override fun doWork() {
         println("Iniciando envio de tasks para o workflow")

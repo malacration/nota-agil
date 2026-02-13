@@ -9,6 +9,7 @@ import br.andrew.nota.agil.qive.interfaces.QiveApiClient
 import br.andrew.nota.agil.repository.JobStateRepository
 import br.andrew.nota.agil.repository.TaskRepository
 import br.andrew.nota.agil.scheduling.core.NfReciveGeneric
+import br.andrew.nota.agil.infrastructure.JobsConfiguration
 import org.springframework.scheduling.TaskScheduler
 import java.time.Duration
 
@@ -17,18 +18,16 @@ class NfeReciveSchedule(
         task : TaskScheduler,
         company : Company,
         jobStateRepository: JobStateRepository,
+        jobsConfiguration: JobsConfiguration,
         val taskRepository: TaskRepository,
         val service: QiveApiClient) : NfReciveGeneric(
     task,
     company,
     JobsTypes.NfeReceived,
     jobStateRepository,
+    jobsConfiguration,
     Duration.ofMinutes(1)
 ){
-    init {
-        stop()
-    }
-
     override fun doWork() {
         val state = getJobState()
         val fromDate = getFromDate(state)
@@ -54,6 +53,5 @@ class NfeReciveSchedule(
         state.lastFrom = toDate.toInstant()
         state.cursor = 0
         jobStateRepository.save(state)
-
     }
 }

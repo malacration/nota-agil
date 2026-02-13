@@ -13,4 +13,8 @@ interface TaskRepository : MongoRepository<Task, String> {
 
     fun findAllByStatus(taskStatus: TaskStatus, sort: Sort = Sort.by(Order.desc("createdAt"))) : List<Task>
 
+    fun findAllByDuplicataCpfCnpjPrestadorInAndDuplicataNumeroIn(
+        cnpjPrestador: Collection<String>,
+        numeros: Collection<String>
+    ): List<Task>
 }
