@@ -2,6 +2,7 @@ package br.andrew.nota.agil.controllers
 
 import br.andrew.nota.agil.qive.interfaces.QiveApiClient
 import br.andrew.nota.agil.qive.interfaces.ReceivedResponse
+import br.andrew.nota.agil.qive.model.ConhecimentoTransporte
 import br.andrew.nota.agil.qive.model.NotaProdutos
 import br.andrew.nota.agil.qive.model.NotaServico
 import br.andrew.nota.agil.repository.TaskRepository
@@ -98,6 +99,15 @@ class IndexController(
         @RequestParam("to")   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to : Date?,
         @RequestParam(name = "cursor") cursor : Int? = null) : ReceivedResponse<NotaServico> {
         return qiveApi.nfse.listReceived(listOf(cnpj),cursor,from,to)
+    }
+
+    @GetMapping("cte/{cnpj}")
+    fun cteByCnpj(
+        @PathVariable cnpj : String,
+        @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from : Date?,
+        @RequestParam("to")   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to : Date?,
+        @RequestParam(name = "cursor") cursor : Int? = null) : ReceivedResponse<ConhecimentoTransporte> {
+        return qiveApi.cte.listReceived(listOf(cnpj),cursor,from,to)
     }
 
     @GetMapping("event/{cnpj}")

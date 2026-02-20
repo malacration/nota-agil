@@ -2,7 +2,7 @@ package br.andrew.nota.agil.scheduling
 
 import br.andrew.nota.agil.model.Company
 import br.andrew.nota.agil.model.JobsTypes
-import br.andrew.nota.agil.model.TaskStatus
+import br.andrew.nota.agil.model.tasks.TaskStatus
 import br.andrew.nota.agil.repository.JobStateRepository
 import br.andrew.nota.agil.repository.TaskRepository
 import br.andrew.nota.agil.scheduling.core.ScheduledAbstract

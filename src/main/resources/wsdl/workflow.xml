@@ -141,9 +141,10 @@
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="accessExceptionData">
-                <xsd:all>
+                <xsd:choice>
                     <xsd:element name="UserID" type="xsd:string"/>
-                </xsd:all>
+                    <xsd:element name="TeamID" type="xsd:string"/>
+                </xsd:choice>
             </xsd:complexType>
             <xsd:complexType name="accessExceptionArray">
                 <xsd:sequence>
@@ -200,7 +201,7 @@
             </xsd:complexType>
             <xsd:complexType name="newWorkflowTypeEditDataRequestType">
                 <xsd:all>
-                    <xsd:element name="WorkflowTypeID" type="xsd:boolean"/>
+                    <xsd:element name="WorkflowTypeID" type="xsd:string"/>
                     <xsd:element name="WorkflowTitle" type="xsd:string"/>
                     <xsd:element name="UserID" type="xsd:string" minOccurs="0"/>
                     <xsd:element name="Requester" type="tns:Requester" minOccurs="0"/>
@@ -448,6 +449,20 @@
                     <xsd:element name="RecordDetailList" type="tns:recordDetailArray"/>
                 </xsd:all>
             </xsd:complexType>
+            <xsd:complexType name="deleteAccessExceptionRequestType">
+                <xsd:all>
+                    <xsd:element name="WorkflowID" type="xsd:string"/>
+                    <xsd:element name="AccessExceptionList" type="tns:accessExceptionArray"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="deleteAccessExceptionResponseType">
+                <xsd:all>
+                    <xsd:element name="Status" type="xsd:string"/>
+                    <xsd:element name="Code" type="xsd:integer"/>
+                    <xsd:element name="Detail" type="xsd:string"/>
+                    <xsd:element name="RecordDetailList" type="tns:recordDetailArray"/>
+                </xsd:all>
+            </xsd:complexType>
             <xsd:complexType name="cancelWorkflowRequestType">
                 <xsd:all>
                     <xsd:element name="WorkflowID" type="xsd:string"/>
@@ -569,6 +584,8 @@
             <xsd:element name="executeActivityResponse" type="tns:executeActivityResponseType"/>
             <xsd:element name="newAccessException" type="tns:newAccessExceptionRequestType"/>
             <xsd:element name="newAccessExceptionResponse" type="tns:newAccessExceptionResponseType"/>
+            <xsd:element name="deleteAccessException" type="tns:deleteAccessExceptionRequestType"/>
+            <xsd:element name="deleteAccessExceptionResponse" type="tns:deleteAccessExceptionResponseType"/>
             <xsd:element name="cancelWorkflow" type="tns:cancelWorkflowRequestType"/>
             <xsd:element name="cancelWorkflowResponse" type="tns:cancelWorkflowResponseType"/>
             <xsd:element name="getWorkflow" type="tns:getWorkflowRequestType"/>
@@ -649,6 +666,10 @@
         <part name="parameters" element="tns:newAccessException" /></message>
     <message name="newAccessExceptionResponse">
         <part name="parameters" element="tns:newAccessExceptionResponse" /></message>
+    <message name="deleteAccessExceptionRequest">
+        <part name="parameters" element="tns:deleteAccessException" /></message>
+    <message name="deleteAccessExceptionResponse">
+        <part name="parameters" element="tns:deleteAccessExceptionResponse" /></message>
     <message name="cancelWorkflowRequest">
         <part name="parameters" element="tns:cancelWorkflow" /></message>
     <message name="cancelWorkflowResponse">
@@ -942,6 +963,22 @@
             <input message="tns:newAccessExceptionRequest"/>
             <output message="tns:newAccessExceptionResponse"/>
         </operation>
+        <operation name="deleteAccessException">
+            <documentation>
+                Remover uma ou mais exceções de acesso do workflow;
+
+                Parâmetros:
+                WorkflowID*: Identificador do workflow;   &lt;AccessExceptionList&gt;  &lt;AccessException&gt;   UserID: Matrícula do usuário;   &lt;/AccessException&gt;  &lt;/AccessExceptionList&gt;
+
+                * Requerido;
+
+
+                Retorno:
+                Status: Situação da execução do método. Seu valor pode ser:   SUCCESS: Método executado com sucesso;    FAILURE: Ocorreu uma falha na execução do método;   Code: Código do retorno do método;   Detail: Detalhe do retorno do método;   &lt;RecordDetailList&gt;  &lt;RecordDetail&gt;   Status: Situação do processamento do registro. Seu valor pode ser:;     SUCCESS: Registro processado com sucesso;     FAILURE: Ocorreu uma falha no processamento do registro;    Code: Código do processamento do registro;    Detail: Detalhe do processamento do registro;    RecordKey: Código do registro incluído;   &lt;/RecordDetail&gt;  &lt;/RecordDetailList&gt;
+            </documentation>
+            <input message="tns:deleteAccessExceptionRequest"/>
+            <output message="tns:deleteAccessExceptionResponse"/>
+        </operation>
         <operation name="cancelWorkflow">
             <documentation>
                 Cancela um workflow;
@@ -1107,6 +1144,11 @@
         </operation>
         <operation name="newAccessException">
             <soap:operation soapAction="urn:workflow#newAccessException" style="document"/>
+            <input><soap:body use="literal" namespace="urn:workflow"/></input>
+            <output><soap:body use="literal" namespace="urn:workflow"/></output>
+        </operation>
+        <operation name="deleteAccessException">
+            <soap:operation soapAction="urn:workflow#deleteAccessException" style="document"/>
             <input><soap:body use="literal" namespace="urn:workflow"/></input>
             <output><soap:body use="literal" namespace="urn:workflow"/></output>
         </operation>

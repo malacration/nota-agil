@@ -17,6 +17,7 @@ data class NotaProdutos(
     var xml: NfeXmlWrapper? = null
 ) {
 
+    @JsonIgnoreProperties
     fun getDuplicata(): Duplicata {
         return Duplicata(
             getDataEmissao() ?: throw Exception("Erro ao recuperar a data de emissão"),
@@ -27,7 +28,8 @@ data class NotaProdutos(
             getValorBruto() ?: throw Exception("Erro ao obter valor bruto"),
             getValorLiquido() ?: throw Exception("Erro ao obter valor líquido"),
             getNumero() ?: throw Exception("Erro ao pegar número da nota"),
-            TipoDuplicata.Nfe
+            TipoDuplicata.Nfe,
+            chaveAcesso = id,
         )
     }
 

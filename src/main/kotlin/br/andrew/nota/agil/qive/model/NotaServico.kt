@@ -5,6 +5,10 @@ import br.andrew.nota.agil.model.TipoDuplicata
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -30,8 +34,17 @@ data class NotaServico(
             getValorBruto() ?:  throw Exception("erro ao obter valor Bruto"),
             getValorLiquido() ?: throw Exception("Erro ao pegar valor liquido"),
             getNumero() ?: throw Exception("Erro ao pegar numero da nota"),
-            TipoDuplicata.Nfse
+            TipoDuplicata.Nfse,
+            chaveAcesso = getChaveAcesso()
         )
+    }
+
+    fun getChaveAcesso(): String? {
+        return id
+            .takeIf { it.isNotBlank() }
+            ?: xml?.nfse?.infNfse?.attributes?.Id
+            ?: xml?.nfse?.infNfse?.declaracaoPrestacaoServico?.infDeclaracaoPrestacaoServico?.attributes?.Id
+            ?: xml?.nfse?.infNfse?.codigoVerificacao
     }
 
     fun getNomePrestador(): String? {
@@ -277,6 +290,7 @@ data class Servico(
     @JsonProperty("IssRetido")
     var issRetido: String? = null,
     @JsonProperty("ItemListaServico")
+    @JsonDeserialize(using = StringOrArrayToStringDeserializer::class)
     var itemListaServico: String? = null,
     @JsonProperty("Discriminacao")
     var discriminacao: String? = null,
@@ -289,6 +303,18 @@ data class Servico(
     @JsonProperty("MunicipioIncidencia")
     var municipioIncidencia: String? = null
 )
+
+class StringOrArrayToStringDeserializer : JsonDeserializer<String?>() {
+    override fun deserialize(parser: JsonParser, context: DeserializationContext): String? {
+        val node = parser.codec.readTree<com.fasterxml.jackson.databind.JsonNode>(parser)
+
+        return when {
+            node.isNull -> null
+            node.isArray -> node.firstOrNull()?.asText()
+            else -> node.asText()
+        }
+    }
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ValoresServico(

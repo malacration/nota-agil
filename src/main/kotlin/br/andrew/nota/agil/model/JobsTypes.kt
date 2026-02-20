@@ -4,5 +4,6 @@ enum class JobsTypes {
     NfeReceived,
     NfeEvents,
     NfseReceived,
+    CteReceived,
     SendWorkFlow,
 }

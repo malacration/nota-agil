@@ -2,9 +2,9 @@ package br.andrew.nota.agil.scheduling.generic
 
 import br.andrew.nota.agil.model.Company
 import br.andrew.nota.agil.model.JobsTypes
-import br.andrew.nota.agil.model.Task
-import br.andrew.nota.agil.model.TaskStatus
-import br.andrew.nota.agil.model.TaskTypes
+import br.andrew.nota.agil.model.tasks.Task
+import br.andrew.nota.agil.model.tasks.TaskStatus
+import br.andrew.nota.agil.model.tasks.TaskTypes
 import br.andrew.nota.agil.qive.interfaces.QiveApiClient
 import br.andrew.nota.agil.repository.JobStateRepository
 import br.andrew.nota.agil.repository.TaskRepository

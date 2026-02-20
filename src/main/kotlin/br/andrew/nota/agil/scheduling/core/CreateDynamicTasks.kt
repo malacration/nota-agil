@@ -2,6 +2,7 @@ package br.andrew.nota.agil.scheduling.core
 
 import br.andrew.nota.agil.model.Company
 import br.andrew.nota.agil.repository.CompanyRepository
+import br.andrew.nota.agil.scheduling.generic.CteReciveSchedule
 import br.andrew.nota.agil.scheduling.generic.NfeReciveSchedule
 import br.andrew.nota.agil.scheduling.generic.NfseReciveSchedule
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -18,7 +19,8 @@ class DynamicTasksConfig(
 
     val jobsByCompany= listOf(
         NfseReciveSchedule::class.java,
-        NfeReciveSchedule::class.java
+        NfeReciveSchedule::class.java,
+        CteReciveSchedule::class.java,
     )
 
     @EventListener(ApplicationReadyEvent::class)

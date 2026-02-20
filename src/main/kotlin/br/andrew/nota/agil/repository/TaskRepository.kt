@@ -1,8 +1,7 @@
 package br.andrew.nota.agil.repository
 
-import br.andrew.nota.agil.model.Company
-import br.andrew.nota.agil.model.Task
-import br.andrew.nota.agil.model.TaskStatus
+import br.andrew.nota.agil.model.tasks.Task
+import br.andrew.nota.agil.model.tasks.TaskStatus
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Sort.Order
 import org.springframework.data.mongodb.repository.MongoRepository

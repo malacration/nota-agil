@@ -46,6 +46,7 @@ dependencies {
     implementation("commons-discovery:commons-discovery:0.5"){
         exclude("commons-logging")
     }
+    implementation("org.apache.tika:tika-core:2.8.0")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
@@ -82,6 +83,7 @@ tasks.buildDependents {
 tasks.register("import-ws") {
     val packgePrefix = "br.andrew.wsdl"
     fileTree("src/main/resources/wsdl").forEach{ file ->
+        val packageName = file.nameWithoutExtension
         doLast {
             javaexec {
                 mainClass.set("org.apache.axis.wsdl.WSDL2Java")
@@ -91,7 +93,7 @@ tasks.register("import-ws") {
 //					configurations.implementation.get().files,
                     configurations.annotationProcessor.get().files
                 )
-                args = listOf("-o","$wsdlDir", "-p","$packgePrefix.${file.name}", file.absolutePath,)
+                args = listOf("-o","$wsdlDir", "-p","$packgePrefix.$packageName", file.absolutePath,)
             }
         }
     }

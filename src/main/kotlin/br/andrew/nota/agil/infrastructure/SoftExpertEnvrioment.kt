@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component
 @Component
 @Configuration
 class SoftExpertEnvrioment(
-    @Value("\${soft.expert.host:windson}") val host : String,
+    @Value("\${soft.expert.host:\${softexpert.api.url:}}") val host : String,
     @Value("\${soft.expert.user:windson}") val user : String,
-    @Value("\${soft.expert.password:windson}") val password : String) {
+    @Value("\${soft.expert.password:windson}") val password : String,
+) {
 
 }

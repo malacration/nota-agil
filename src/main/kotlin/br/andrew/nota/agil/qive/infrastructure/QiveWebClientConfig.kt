@@ -2,6 +2,7 @@ package br.andrew.nota.agil.qive.infrastructure
 
 import br.andrew.nota.agil.qive.interfaces.QiveApiClient
 import br.andrew.nota.agil.qive.interfaces.controllers.Company
+import br.andrew.nota.agil.qive.interfaces.controllers.Cte
 import br.andrew.nota.agil.qive.interfaces.controllers.Events
 import br.andrew.nota.agil.qive.interfaces.controllers.Nfe
 import br.andrew.nota.agil.qive.interfaces.controllers.Nfse
@@ -54,6 +55,12 @@ class QiveWebClientConfig {
             .build()
             .createClient(Nfse::class.java)
 
+        val cte = HttpServiceProxyFactory
+            .builder()
+            .exchangeAdapter(RestClientAdapter.create(rc))
+            .build()
+            .createClient(Cte::class.java)
+
         val events = HttpServiceProxyFactory
             .builder()
             .exchangeAdapter(RestClientAdapter.create(rc))
@@ -66,7 +73,7 @@ class QiveWebClientConfig {
             .build()
             .createClient(Company::class.java)
 
-        return QiveApiClient(nfe,events,company,nfse)
+        return QiveApiClient(nfe,events,company,nfse,cte)
     }
 }
 

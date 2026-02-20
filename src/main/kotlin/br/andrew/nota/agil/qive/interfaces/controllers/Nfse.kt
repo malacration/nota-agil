@@ -1,5 +1,6 @@
 package br.andrew.nota.agil.qive.interfaces.controllers
 
+import br.andrew.nota.agil.qive.interfaces.DocumentPdfResponse
 import br.andrew.nota.agil.qive.interfaces.ReceivedResponse
 import br.andrew.nota.agil.qive.model.NotaServico
 import org.springframework.web.bind.annotation.RequestParam
@@ -26,4 +27,9 @@ interface Nfse {
     fun events(
         @RequestParam("access_key") accessKey: String? = null,
     ): ReceivedResponse<Any>
+
+    @GetExchange("/danfse")
+    fun danfse(
+        @RequestParam("id") id: String,
+    ): DocumentPdfResponse
 }

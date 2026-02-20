@@ -1,13 +1,11 @@
-package br.andrew.nota.agil.model
+package br.andrew.nota.agil.model.tasks
 
+import br.andrew.nota.agil.model.Duplicata
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import java.math.BigDecimal
-import java.text.SimpleDateFormat
 import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Date
 
 
@@ -26,6 +24,11 @@ class Task(
     @field:CreatedDate
     var createdAt: Instant = Instant.now()
 
+    @JsonIgnore
+    fun getWorkFlowId(): String? {
+        return recordID
+    }
+
     init{
         if(taskType == TaskTypes.CreateTask && duplicata == null)
             throw Exception("Nao é permitido tarefa de criar com duplicata null")
@@ -43,5 +46,6 @@ enum class TaskStatus {
 
 enum class TaskTypes {
     CreateTask,
+    UploadPdf,
     CancelTask
 }

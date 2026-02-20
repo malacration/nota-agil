@@ -647,7 +647,6 @@
                     <xsd:element name="IDCATEGORY" type="xsd:string"/>
                     <xsd:element name="NMCATEGORY" type="xsd:string"/>
                     <xsd:element name="STATUS" type="xsd:string"/>
-                    <xsd:element name="NRHITS" type="xsd:int"/>
                     <xsd:element name="NMAUTHOR" type="xsd:string"/>
                     <xsd:element name="IDREVISION" type="xsd:string"/>
                     <xsd:element name="DTDOCUMENT" type="xsd:string"/>
@@ -672,6 +671,7 @@
                     <xsd:element name="DTDOCUMENT" type="xsd:string"/>
                     <xsd:element name="IDCATEGORY" type="xsd:string"/>
                     <xsd:element name="NMCATEGORY" type="xsd:string"/>
+                    <xsd:element name="NMFILE" type="xsd:string"/>
                 </xsd:all>
             </xsd:complexType>
             <xsd:complexType name="categoryReturn">
@@ -1211,7 +1211,7 @@
                 14 =&gt; Notificação;
                 15 =&gt; Incluir comentário;
                 16 =&gt; Avaliar aplicabilidade). Ex: 1,2,3 *;&lt;BR&gt;
-                PERMISSIONSTYPE-&gt; Tipo de ação (1 =&gt; Permitir; 2 =&gt; Negar)*;&lt;BR&gt;
+                PERMISSIONSTYPE-&gt; Valor depreciado*;&lt;BR&gt;
                 FGADDLOWERLEVEL-&gt; Considerar subníveis (1 =&gt; Sim; 2 =&gt; Não);&lt;BR&gt;
                 IDCATEGORY     -&gt; Identificador da categoria;&lt;BR&gt;
                 Em caso de SUCESSO: Retorna uma mensagem de ´1: Operação realizada com sucesso.´.&lt;BR&gt;Em caso de FALHA, retorna uma mensagem com o erro ocorrido.&lt;BR&gt;
@@ -1495,7 +1495,6 @@
                 IDCATEGORY: String; Identificador da categoria;&lt;BR&gt;
                 NMCATEGORY: String; Nome da categoria;&lt;BR&gt;
                 STATUS: String; Situação do documento: 1: Emissão, 2: Homologado, 3: Revisão, 4: Cancelado, 5: Indexação, 6: Aprovação, 7: Contrato encerrado&lt;BR&gt;
-                NRHITS: Integer; Hits;&lt;BR&gt;
                 NMAUTHOR: String; Autor;&lt;BR&gt;
                 IDREVISION: String; Identificador da revisão;&lt;BR&gt;
                 DTDOCUMENT: String; Data do documento;&lt;BR&gt;

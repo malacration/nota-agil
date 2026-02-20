@@ -15,7 +15,8 @@ class Duplicata(
     val valorBruto : BigDecimal,
     val valorLiquido : BigDecimal,
     val numero : String,
-    val tipo : TipoDuplicata,
+    val tipo : TipoDuplicata = TipoDuplicata.NaoDetectado,
+    val chaveAcesso : String?  = null,
 ){
 
     companion object {
@@ -26,7 +27,7 @@ class Duplicata(
 
     fun getTitulo(): String {
         val instant = dataEmissao.toInstant()
-        return "${DATE_FMT.format(instant)} - $razaoPrestador - Nº $numero"
+        return "${DATE_FMT.format(instant)} ${tipo} Nº $numero - $razaoPrestador"
     }
 
     fun getSoftexpertMap(tableName: String): Map<String, Map<String, String>> {
