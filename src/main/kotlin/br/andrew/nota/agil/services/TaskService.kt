@@ -85,6 +85,8 @@ class TaskService(
             taskRepository.saveAll(listOf(
                 task,
             ))
+        }else{
+            throw Exception("Erro ao mover a tarefa. ${dadosFluxo.detail}")
         }
     }
 }
