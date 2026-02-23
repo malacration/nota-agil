@@ -54,6 +54,12 @@ class TaskService(
                 task,
                 TasksParser(task).toTaskUploadDocument()
             ))
+        }else{
+            task.status = TaskStatus.FAILED
+            taskRepository.saveAll(listOf(
+                task,
+            ))
+            throw Exception("Erro ao criar a tarefa. ${dadosFluxo.detail}")
         }
     }
 
@@ -86,6 +92,10 @@ class TaskService(
                 task,
             ))
         }else{
+            task.status = TaskStatus.FAILED
+            taskRepository.saveAll(listOf(
+                task,
+            ))
             throw Exception("Erro ao mover a tarefa. ${dadosFluxo.detail}")
         }
     }
