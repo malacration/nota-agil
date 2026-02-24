@@ -5,6 +5,10 @@ import br.andrew.nota.agil.model.TipoDuplicata
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.math.BigDecimal
 import java.time.*
 import java.time.format.DateTimeFormatter
@@ -143,6 +147,7 @@ data class InfNFe(
 
     @JsonFormat(with = [JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY])
     var pag: List<Pagamento>? = null,
+    @JsonDeserialize(using = SingleOrArrayToInfAdicDeserializer::class)
     var infAdic: InfAdic? = null,
     var infRespTec: InfRespTec? = null
 )
@@ -404,6 +409,18 @@ data class DetPag(
 data class InfAdic(
     var infCpl: String? = null
 )
+
+class SingleOrArrayToInfAdicDeserializer : JsonDeserializer<InfAdic?>() {
+    override fun deserialize(parser: JsonParser, context: DeserializationContext): InfAdic? {
+        val node = parser.codec.readTree<com.fasterxml.jackson.databind.JsonNode>(parser)
+
+        return when {
+            node.isNull -> null
+            node.isArray -> node.firstOrNull()?.let { parser.codec.treeToValue(it, InfAdic::class.java) }
+            else -> parser.codec.treeToValue(node, InfAdic::class.java)
+        }
+    }
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class InfRespTec(

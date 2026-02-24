@@ -25,7 +25,7 @@ class TaskService(
 
 ) {
     fun executa(task : Task){
-        if(task.status != TaskStatus.READY){
+        if(task.status == TaskStatus.FINISHED){
             return
         }
 
