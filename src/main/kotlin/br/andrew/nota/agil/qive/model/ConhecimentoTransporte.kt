@@ -84,12 +84,21 @@ data class ConhecimentoTransporte(
         infCte?.toma4?.toma?.xNome
             ?: infCte?.toma?.xNome
             ?: partyFromToma3()?.xNome
+            ?: textAt(infCteNode, "ide", "toma4", "xNome")
+            ?: textAt(infCteNode, "toma4", "xNome")
+            ?: textAt(infCteNode, "toma4", "toma", "xNome")
             ?: fallbackParties().firstNotNullOfOrNull { it?.xNome }
 
     fun getCpfCnpjTomador(): String? =
         infCte?.toma4?.toma?.anyDoc()
             ?: infCte?.toma?.anyDoc()
             ?: partyFromToma3()?.anyDoc()
+            ?: textAt(infCteNode, "ide", "toma4", "CNPJ")
+            ?: textAt(infCteNode, "ide", "toma4", "CPF")
+            ?: textAt(infCteNode, "toma4", "CNPJ")
+            ?: textAt(infCteNode, "toma4", "CPF")
+            ?: textAt(infCteNode, "toma4", "toma", "CNPJ")
+            ?: textAt(infCteNode, "toma4", "toma", "CPF")
             ?: fallbackParties().firstNotNullOfOrNull { it?.anyDoc() }
 
     fun getValorBruto(): BigDecimal? =

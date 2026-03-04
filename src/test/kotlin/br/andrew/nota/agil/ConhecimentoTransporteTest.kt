@@ -373,219 +373,8 @@ class ConhecimentoTransporteTest {
         assertEquals("285.00", duplicata.valorLiquido.toPlainString())
         assertEquals("2026-01-21T12:57:41Z", duplicata.dataEmissao.toInstant().toString())
 
-    }
+        assertEquals("05925052000516", cte.getCpfCnpjTomador())
 
-    @Test
-    fun jsonRealSimplificado(){
-        val json = "{\n" +
-                "  \"@attributes\" : {\n" +
-                "    \"versao\" : \"4.00\"\n" +
-                "  },\n" +
-                "  \"CTeSimp\" : {\n" +
-                "    \"infCte\" : {\n" +
-                "      \"@attributes\" : {\n" +
-                "        \"versao\" : \"4.00\",\n" +
-                "        \"Id\" : \"CTe11260205925052000516570010000012101387979859\"\n" +
-                "      },\n" +
-                "      \"ide\" : {\n" +
-                "        \"cUF\" : \"11\",\n" +
-                "        \"cCT\" : \"38797985\",\n" +
-                "        \"CFOP\" : \"5352\",\n" +
-                "        \"natOp\" : \"Prestacao de Servico\",\n" +
-                "        \"mod\" : \"57\",\n" +
-                "        \"serie\" : \"1\",\n" +
-                "        \"nCT\" : \"1210\",\n" +
-                "        \"dhEmi\" : \"2026-02-05T09:36:35-03:00\",\n" +
-                "        \"tpImp\" : \"1\",\n" +
-                "        \"tpEmis\" : \"1\",\n" +
-                "        \"cDV\" : \"9\",\n" +
-                "        \"tpAmb\" : \"1\",\n" +
-                "        \"tpCTe\" : \"5\",\n" +
-                "        \"procEmi\" : \"0\",\n" +
-                "        \"verProc\" : \"1\",\n" +
-                "        \"cMunEnv\" : \"1100205\",\n" +
-                "        \"xMunEnv\" : \"PORTO VELHO\",\n" +
-                "        \"UFEnv\" : \"RO\",\n" +
-                "        \"modal\" : \"01\",\n" +
-                "        \"tpServ\" : \"0\",\n" +
-                "        \"UFIni\" : \"RO\",\n" +
-                "        \"UFFim\" : \"RO\",\n" +
-                "        \"retira\" : \"1\"\n" +
-                "      },\n" +
-                "      \"emit\" : {\n" +
-                "        \"CNPJ\" : \"05925052000516\",\n" +
-                "        \"IE\" : \"00000005470439\",\n" +
-                "        \"xNome\" : \"FAZENDA RIOMADEIRA S/A-FARM-CD\",\n" +
-                "        \"enderEmit\" : {\n" +
-                "          \"xLgr\" : \"RODOVIA BR-364\",\n" +
-                "          \"nro\" : \"9100\",\n" +
-                "          \"xBairro\" : \"Loteamento Santo afonso\",\n" +
-                "          \"cMun\" : \"1100205\",\n" +
-                "          \"xMun\" : \"PORTO VELHO\",\n" +
-                "          \"CEP\" : \"76816800\",\n" +
-                "          \"UF\" : \"RO\"\n" +
-                "        },\n" +
-                "        \"CRT\" : \"3\"\n" +
-                "      },\n" +
-                "      \"toma\" : {\n" +
-                "        \"toma\" : \"0\",\n" +
-                "        \"indIEToma\" : \"1\",\n" +
-                "        \"CNPJ\" : \"09054087000154\",\n" +
-                "        \"IE\" : \"00000002304732\",\n" +
-                "        \"xNome\" : \"SUSTENNUTRI NUTRICAO ANIMAL  - MATRIZ\",\n" +
-                "        \"enderToma\" : {\n" +
-                "          \"xLgr\" : \"DEPUTADO SERGIO CARVALHO\",\n" +
-                "          \"nro\" : \"S/N\",\n" +
-                "          \"xCpl\" : \"QUADRA 04 LOTE 01 LOTE 02\",\n" +
-                "          \"xBairro\" : \"ZONA RURAL\",\n" +
-                "          \"cMun\" : \"1100205\",\n" +
-                "          \"xMun\" : \"PORTO VELHO\",\n" +
-                "          \"CEP\" : \"76835500\",\n" +
-                "          \"UF\" : \"RO\",\n" +
-                "          \"xPais\" : \"Brasil\"\n" +
-                "        },\n" +
-                "        \"email\" : \"administrativoarmazem02@sustennutri.com.br\"\n" +
-                "      },\n" +
-                "      \"infCarga\" : {\n" +
-                "        \"vCarga\" : \"1825.00\",\n" +
-                "        \"proPred\" : \"OX PRIME ZP\",\n" +
-                "        \"xOutCat\" : \"NUTRICAO ANIMAL\",\n" +
-                "        \"infQ\" : {\n" +
-                "          \"cUnid\" : \"01\",\n" +
-                "          \"tpMed\" : \"02\",\n" +
-                "          \"qCarga\" : \"5700.0000\"\n" +
-                "        },\n" +
-                "        \"vCargaAverb\" : \"1825.00\"\n" +
-                "      },\n" +
-                "      \"det\" : {\n" +
-                "        \"@attributes\" : {\n" +
-                "          \"nItem\" : \"1\"\n" +
-                "        },\n" +
-                "        \"cMunIni\" : \"1100205\",\n" +
-                "        \"xMunIni\" : \"PORTO VELHO\",\n" +
-                "        \"cMunFim\" : \"1100700\",\n" +
-                "        \"xMunFim\" : \"CAMPO NOVO DE RONDONIA\",\n" +
-                "        \"vPrest\" : \"1825.00\",\n" +
-                "        \"vRec\" : \"1825.00\",\n" +
-                "        \"infNFe\" : [ {\n" +
-                "          \"chNFe\" : \"11260209054087000154550020000011301338398857\",\n" +
-                "          \"dPrev\" : \"2026-02-04\"\n" +
-                "        }, {\n" +
-                "          \"chNFe\" : \"11260209054087000154550020000011271801923471\",\n" +
-                "          \"dPrev\" : \"2026-02-04\"\n" +
-                "        } ]\n" +
-                "      },\n" +
-                "      \"infModal\" : {\n" +
-                "        \"@attributes\" : {\n" +
-                "          \"versaoModal\" : \"4.00\"\n" +
-                "        },\n" +
-                "        \"rodo\" : {\n" +
-                "          \"RNTRC\" : \"54157055\"\n" +
-                "        }\n" +
-                "      },\n" +
-                "      \"cobr\" : {\n" +
-                "        \"fat\" : {\n" +
-                "          \"vOrig\" : \"1825.00\",\n" +
-                "          \"vLiq\" : \"1825.00\"\n" +
-                "        }\n" +
-                "      },\n" +
-                "      \"imp\" : {\n" +
-                "        \"ICMS\" : {\n" +
-                "          \"ICMS45\" : {\n" +
-                "            \"CST\" : \"40\"\n" +
-                "          }\n" +
-                "        },\n" +
-                "        \"IBSCBS\" : {\n" +
-                "          \"CST\" : \"000\",\n" +
-                "          \"cClassTrib\" : \"000001\",\n" +
-                "          \"gIBSCBS\" : {\n" +
-                "            \"vBC\" : \"1825.00\",\n" +
-                "            \"gIBSUF\" : {\n" +
-                "              \"pIBSUF\" : \"0.10\",\n" +
-                "              \"vIBSUF\" : \"1.82\"\n" +
-                "            },\n" +
-                "            \"gIBSMun\" : {\n" +
-                "              \"pIBSMun\" : \"0.00\",\n" +
-                "              \"vIBSMun\" : \"0.00\"\n" +
-                "            },\n" +
-                "            \"vIBS\" : \"1.82\",\n" +
-                "            \"gCBS\" : {\n" +
-                "              \"pCBS\" : \"0.90\",\n" +
-                "              \"vCBS\" : \"16.42\"\n" +
-                "            }\n" +
-                "          }\n" +
-                "        }\n" +
-                "      },\n" +
-                "      \"total\" : {\n" +
-                "        \"vTPrest\" : \"1825.00\",\n" +
-                "        \"vTRec\" : \"1825.00\"\n" +
-                "      }\n" +
-                "    },\n" +
-                "    \"infCTeSupl\" : {\n" +
-                "      \"qrCodCTe\" : \"https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe=11260205925052000516570010000012101387979859&tpAmb=1\"\n" +
-                "    },\n" +
-                "    \"Signature\" : {\n" +
-                "      \"SignedInfo\" : {\n" +
-                "        \"CanonicalizationMethod\" : {\n" +
-                "          \"@attributes\" : {\n" +
-                "            \"Algorithm\" : \"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"\n" +
-                "          }\n" +
-                "        },\n" +
-                "        \"SignatureMethod\" : {\n" +
-                "          \"@attributes\" : {\n" +
-                "            \"Algorithm\" : \"http://www.w3.org/2000/09/xmldsig#rsa-sha1\"\n" +
-                "          }\n" +
-                "        },\n" +
-                "        \"Reference\" : {\n" +
-                "          \"@attributes\" : {\n" +
-                "            \"URI\" : \"#CTe11260205925052000516570010000012101387979859\"\n" +
-                "          },\n" +
-                "          \"Transforms\" : {\n" +
-                "            \"Transform\" : [ {\n" +
-                "              \"@attributes\" : {\n" +
-                "                \"Algorithm\" : \"http://www.w3.org/2000/09/xmldsig#enveloped-signature\"\n" +
-                "              }\n" +
-                "            }, {\n" +
-                "              \"@attributes\" : {\n" +
-                "                \"Algorithm\" : \"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"\n" +
-                "              }\n" +
-                "            } ]\n" +
-                "          },\n" +
-                "          \"DigestMethod\" : {\n" +
-                "            \"@attributes\" : {\n" +
-                "              \"Algorithm\" : \"http://www.w3.org/2000/09/xmldsig#sha1\"\n" +
-                "            }\n" +
-                "          },\n" +
-                "          \"DigestValue\" : \"QbADDV1SWJZrjmOjuSHDVvK2Yu0=\"\n" +
-                "        }\n" +
-                "      },\n" +
-                "      \"SignatureValue\" : \"VS87RGqw2oKCUBbGTBkhzQJkcE2bozeESNPbbsqRrezVhB6FBZTjlUI6IiFowauRk+NIQ8d/5VwUbfdMCCvQjtMaH9yQDSZKEljFFvSaYdFEA8hdzonveq3I1P1qFoqGYcurybGKWd1N/zIDVN/+/HPiY3EWtFFdaqExTSxspPCAJnP/6h4Fa/NZPMdo3hanrANr49hdLBHvt6a4mLXzdV5aLCFDYEfie4TcFdyPAkH3+XzDmq+G+uA3QldBzdJR0CgM27T+DarvsI1X1yQIaLUmC796qRhOFsqvwOqG5MVjAExkKU9bl4FYfKnmjKFZIogMS8klxIApyiqTSAjgKQ==\",\n" +
-                "      \"KeyInfo\" : {\n" +
-                "        \"X509Data\" : {\n" +
-                "          \"X509Certificate\" : \"MIIHmDCCBYCgAwIBAgIIbjdea4TuV08wDQYJKoZIhvcNAQELBQAwczELMAkGA1UE\\nBhMCQlIxEzARBgNVBAoTCklDUC1CcmFzaWwxNjA0BgNVBAsTLVNlY3JldGFyaWEg\\nZGEgUmVjZWl0YSBGZWRlcmFsIGRvIEJyYXNpbCAtIFJGQjEXMBUGA1UEAxMOQUMg\\nTElOSyBSRkIgdjIwHhcNMjUwNzI4MTM0NTQ2WhcNMjYwNzI4MTM0NTQ2WjCB+TEL\\nMAkGA1UEBhMCQlIxEzARBgNVBAoTCklDUC1CcmFzaWwxCzAJBgNVBAgTAlJPMRQw\\nEgYDVQQHEwtQT1JUTyBWRUxITzEXMBUGA1UECxMOMjcyNzM4MDAwMDAxMzIxNjA0\\nBgNVBAsTLVNlY3JldGFyaWEgZGEgUmVjZWl0YSBGZWRlcmFsIGRvIEJyYXNpbCAt\\nIFJGQjEWMBQGA1UECxMNUkZCIGUtQ05QSiBBMTETMBEGA1UECxMKcHJlc2VuY2lh\\nbDE0MDIGA1UEAxMrRkFaRU5EQSBSSU8gTUFERUlSQSBTIEEgRkFSTTowNTkyNTA1\\nMjAwMDE5MjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ+Qn6Cl7quD\\nZ7lAZlD560j647sGCdEfo714xemhm0oywXcZYUXvcQbvy1fuKrseINVs30iK7gkf\\n7RfKuqYh01ddM31cf5hNoOa/+OfPSWqwYCvN3Ou9Xfce5fOwngqcxOnn0OikN8vz\\ni13lbJt3rgEGYC3GKXjZey463t6n0J/H5GrxGwINhfhGbG1iZk7nHa0EALNWXV38\\n4iJPCYunugeSrIMNVmJyKTmTazWtw4uyW7ee0VVqNXrMFa8DaA31I7CTiHJuqeUv\\nAFFVDrz9VJKBxUBWbsWWDbzvBGCsVy8ySOeuo3ssHSzuy5lMJJ6F5c7zOQAfh/g/\\n0IRaWFQvCi0CAwEAAaOCAqcwggKjMB8GA1UdIwQYMBaAFA3f1kf0E07lIlgyLGam\\n5y7kV7wCMA4GA1UdDwEB/wQEAwIF4DBsBgNVHSAEZTBjMGEGBmBMAQIBOzBXMFUG\\nCCsGAQUFBwIBFklodHRwOi8vcmVwb3NpdG9yaW8ubGlua2NlcnRpZmljYWNhby5j\\nb20uYnIvYWMtbGlua3JmYi9hYy1saW5rLXJmYi1kcGMucGRmMIGwBgNVHR8Egagw\\ngaUwUKBOoEyGSmh0dHA6Ly9yZXBvc2l0b3Jpby5saW5rY2VydGlmaWNhY2FvLmNv\\nbS5ici9hYy1saW5rcmZiL2xjci1hYy1saW5rcmZidjUuY3JsMFGgT6BNhktodHRw\\nOi8vcmVwb3NpdG9yaW8yLmxpbmtjZXJ0aWZpY2FjYW8uY29tLmJyL2FjLWxpbmty\\nZmIvbGNyLWFjLWxpbmtyZmJ2NS5jcmwwYgYIKwYBBQUHAQEEVjBUMFIGCCsGAQUF\\nBzAChkZodHRwOi8vcmVwb3NpdG9yaW8ubGlua2NlcnRpZmljYWNhby5jb20uYnIv\\nYWMtbGlua3JmYi9hYy1saW5rcmZidjUucDdiMIHABgNVHREEgbgwgbWBJExFR0FM\\nSVpBQ0FPMDJAQ1NDLkdSVVBPUk9WRU1BLkNPTS5CUqAfBgVgTAEDAqAWExRWQUxE\\nRUNJUiBMVUlaIEdIRURJTqAZBgVgTAEDA6AQEw4wNTkyNTA1MjAwMDE5MqA4BgVg\\nTAEDBKAvEy0zMDA3MTk2NTMyNTM4MTQ2MjkxMDAwMDAwMDAwMDAwMDAwMDAwMDAw\\nMDAwMDCgFwYFYEwBAwegDhMMMDAwMDAwMDAwMDAwMB0GA1UdJQQWMBQGCCsGAQUF\\nBwMCBggrBgEFBQcDBDAJBgNVHRMEAjAAMA0GCSqGSIb3DQEBCwUAA4ICAQAja607\\niFZfpYX/CuLEQzPd4Vcd1j7QBYFG1Gz673lPevrYPrTe2CrA77VZNyknrpu31v7w\\n7KlrG+pe7TKa6thPL5J3zxxWFA/fFbwSWlZqvPDRZfA+RtDwEbR1xtaYmBg1el9U\\nnNgIwKr5e3CrrgHu8qMNfBxmCmf1i8Ede+Ohbi9TKmUdLP0jkEy2QOEr6SliWTcS\\nntWMvp+ZhOOcq4EfPVONFu0qCj+sjq1CIIOJiAY2pVugMrl1lG4mm/wKxHtWmgeT\\nezaF9I4KZb3FASR4IiE8fRNSehpQcPpFLYC7bS4V3Ect7O87dLLmzZMuKeir5XS1\\nJ6kDQA4MueZ19l/P1i1aUi3COj3XgKHB2ieDsjd49wM63Xi3fsqvWGoHSWEYuxp8\\nunPTwFHGY5N6OrITPD4Zy1uvROEqM3WjTnxSwg93RL0RmH5sesoaEh+p4a3dTUXc\\naH/dnUDFH++1NQfTUq5T67Yxj5XPAj2ZvYSQ7yo7hgpX5V1xwOJqAHmYCTVU4bpe\\nwWk8PRjHiwKElShHwAOSPxr+hqg6vM9l+f+AEpWWW+fzvc1XRETmAvfoxb/V7SEH\\nyLC80DvcDdOGdWx/bgtV9v5ARufey91CQazoM5YKnG3eB+f1LEUI+qkLmEaDo+AR\\nIsBUjC42kVFCM5oFsOpeEwEZml/UBJc6fRH8Wg==\\n\"\n" +
-                "        }\n" +
-                "      }\n" +
-                "    }\n" +
-                "  },\n" +
-                "  \"protCTe\" : {\n" +
-                "    \"@attributes\" : {\n" +
-                "      \"versao\" : \"4.00\"\n" +
-                "    },\n" +
-                "    \"infProt\" : {\n" +
-                "      \"@attributes\" : {\n" +
-                "        \"Id\" : \"CTe311260001992740\"\n" +
-                "      },\n" +
-                "      \"tpAmb\" : \"1\",\n" +
-                "      \"verAplic\" : \"RS20260105155901\",\n" +
-                "      \"chCTe\" : \"11260205925052000516570010000012101387979859\",\n" +
-                "      \"dhRecbto\" : \"2026-02-05T09:50:54-03:00\",\n" +
-                "      \"nProt\" : \"311260001992740\",\n" +
-                "      \"digVal\" : \"QbADDV1SWJZrjmOjuSHDVvK2Yu0=\",\n" +
-                "      \"cStat\" : \"100\",\n" +
-                "      \"xMotivo\" : \"Autorizado o uso do CT-e\"\n" +
-                "    }\n" +
-                "  }\n" +
-                "}"
     }
 
     @Test
@@ -1030,5 +819,260 @@ class ConhecimentoTransporteTest {
 
         assertEquals("1825.00", cte.getValorBruto()?.toPlainString())
         assertEquals("1825.00", cte.getValorLiquido()?.toPlainString())
+        assertEquals("09054087000154", cte.getCpfCnpjTomador())
+    }
+
+    @Test
+    fun testeCnpjTomador(){
+        val json = "    {\n" +
+                "      \"access_key\": \"11260250990361000109570010000000021866587552\",\n" +
+                "      \"xml\": {\n" +
+                "        \"@attributes\": {\n" +
+                "          \"versao\": \"4.00\"\n" +
+                "        },\n" +
+                "        \"CTe\": {\n" +
+                "          \"infCte\": {\n" +
+                "            \"@attributes\": {\n" +
+                "              \"Id\": \"CTe11260250990361000109570010000000021866587552\",\n" +
+                "              \"versao\": \"4.00\"\n" +
+                "            },\n" +
+                "            \"ide\": {\n" +
+                "              \"cUF\": \"11\",\n" +
+                "              \"cCT\": \"86658755\",\n" +
+                "              \"CFOP\": \"5352\",\n" +
+                "              \"natOp\": \"Prestacao de servico de transporte a estabelecimento indust\",\n" +
+                "              \"mod\": \"57\",\n" +
+                "              \"serie\": \"1\",\n" +
+                "              \"nCT\": \"2\",\n" +
+                "              \"dhEmi\": \"2026-02-28T09:21:00-04:00\",\n" +
+                "              \"tpImp\": \"1\",\n" +
+                "              \"tpEmis\": \"1\",\n" +
+                "              \"cDV\": \"2\",\n" +
+                "              \"tpAmb\": \"1\",\n" +
+                "              \"tpCTe\": \"0\",\n" +
+                "              \"procEmi\": \"0\",\n" +
+                "              \"verProc\": \"1.0\",\n" +
+                "              \"cMunEnv\": \"1100205\",\n" +
+                "              \"xMunEnv\": \"PORTO VELHO\",\n" +
+                "              \"UFEnv\": \"RO\",\n" +
+                "              \"modal\": \"01\",\n" +
+                "              \"tpServ\": \"0\",\n" +
+                "              \"cMunIni\": \"1100205\",\n" +
+                "              \"xMunIni\": \"PORTO VELHO\",\n" +
+                "              \"UFIni\": \"RO\",\n" +
+                "              \"cMunFim\": \"1100205\",\n" +
+                "              \"xMunFim\": \"PORTO VELHO\",\n" +
+                "              \"UFFim\": \"RO\",\n" +
+                "              \"retira\": \"1\",\n" +
+                "              \"indIEToma\": \"1\",\n" +
+                "              \"toma4\": {\n" +
+                "                \"toma\": \"4\",\n" +
+                "                \"CNPJ\": \"05925052000516\",\n" +
+                "                \"IE\": \"00000005470439\",\n" +
+                "                \"xNome\": \"FAZENDA RIO MADEIRA S/A - FARM\",\n" +
+                "                \"xFant\": \"FAZENDA CD\",\n" +
+                "                \"enderToma\": {\n" +
+                "                  \"xLgr\": \"Rodovia BR-364\",\n" +
+                "                  \"nro\": \"9100\",\n" +
+                "                  \"xCpl\": \"PAVMTOSUPERIOR\",\n" +
+                "                  \"xBairro\": \"Aeroclube\",\n" +
+                "                  \"cMun\": \"1100205\",\n" +
+                "                  \"xMun\": \"Porto Velho\",\n" +
+                "                  \"CEP\": \"76816800\",\n" +
+                "                  \"UF\": \"RO\",\n" +
+                "                  \"cPais\": \"1058\",\n" +
+                "                  \"xPais\": \"Brasil\"\n" +
+                "                }\n" +
+                "              }\n" +
+                "            },\n" +
+                "            \"compl\": {\n" +
+                "              \"xObs\": \"(PLACA RSV1J88 ) LSA comércios e acessórios para veículos Dados para pagamento Credisis Banco 097 Agência 0005 Conta corrente 301724-9 Chave pix Leonardo -scherer @hotmail.com\"\n" +
+                "            },\n" +
+                "            \"emit\": {\n" +
+                "              \"CNPJ\": \"50990361000109\",\n" +
+                "              \"IE\": \"00000006688004\",\n" +
+                "              \"xNome\": \"L. S. A. COMERCIO E ACESSORIOS DE VEICULOS LTDA\",\n" +
+                "              \"xFant\": \"L. S. A. COMERCIO E ACESSORIOS DE VEICULOS LTDA\",\n" +
+                "              \"enderEmit\": {\n" +
+                "                \"xLgr\": \"Rua da Beira\",\n" +
+                "                \"nro\": \"6200\",\n" +
+                "                \"xBairro\": \"Floresta\",\n" +
+                "                \"cMun\": \"1100205\",\n" +
+                "                \"xMun\": \"Porto Velho\",\n" +
+                "                \"CEP\": \"76806130\",\n" +
+                "                \"UF\": \"RO\"\n" +
+                "              },\n" +
+                "              \"CRT\": \"1\"\n" +
+                "            },\n" +
+                "            \"rem\": {\n" +
+                "              \"CNPJ\": \"05925052000435\",\n" +
+                "              \"IE\": \"00000005470463\",\n" +
+                "              \"xNome\": \"FAZENDA RIO MADEIRA S/A - FARM\",\n" +
+                "              \"xFant\": \"FAZENDA SERRA VERDE\",\n" +
+                "              \"enderReme\": {\n" +
+                "                \"xLgr\": \"Área Rural\",\n" +
+                "                \"nro\": \"S/N\",\n" +
+                "                \"xBairro\": \"Área Rural de Porto Velho\",\n" +
+                "                \"cMun\": \"1100205\",\n" +
+                "                \"xMun\": \"Porto Velho\",\n" +
+                "                \"CEP\": \"76834899\",\n" +
+                "                \"UF\": \"RO\",\n" +
+                "                \"cPais\": \"1058\",\n" +
+                "                \"xPais\": \"Brasil\"\n" +
+                "              }\n" +
+                "            },\n" +
+                "            \"dest\": {\n" +
+                "              \"CNPJ\": \"09054087000154\",\n" +
+                "              \"IE\": \"00000002304732\",\n" +
+                "              \"xNome\": \"SUSTENNUTRI NUTRICAO ANIMAL LTDA\",\n" +
+                "              \"enderDest\": {\n" +
+                "                \"xLgr\": \"RUA DEPUTADO SERGIO CARVALHO\",\n" +
+                "                \"nro\": \"S/N\",\n" +
+                "                \"xCpl\": \"QUADRA04 LOTE 01 LOTE 02 LOTE 05\",\n" +
+                "                \"xBairro\": \"Industrial\",\n" +
+                "                \"cMun\": \"1100205\",\n" +
+                "                \"xMun\": \"Porto Velho\",\n" +
+                "                \"CEP\": \"76835500\",\n" +
+                "                \"UF\": \"RO\",\n" +
+                "                \"cPais\": \"1058\",\n" +
+                "                \"xPais\": \"Brasil\"\n" +
+                "              }\n" +
+                "            },\n" +
+                "            \"vPrest\": {\n" +
+                "              \"vTPrest\": \"6166.66\",\n" +
+                "              \"vRec\": \"6166.66\"\n" +
+                "            },\n" +
+                "            \"imp\": {\n" +
+                "              \"ICMS\": {\n" +
+                "                \"ICMSSN\": {\n" +
+                "                  \"CST\": \"90\",\n" +
+                "                  \"indSN\": \"1\"\n" +
+                "                }\n" +
+                "              }\n" +
+                "            },\n" +
+                "            \"infCTeNorm\": {\n" +
+                "              \"infCarga\": {\n" +
+                "                \"vCarga\": \"84130.00\",\n" +
+                "                \"proPred\": \"SOJA EM GRAO INTACTA\",\n" +
+                "                \"infQ\": [\n" +
+                "                  {\n" +
+                "                    \"cUnid\": \"01\",\n" +
+                "                    \"tpMed\": \"KG\",\n" +
+                "                    \"qCarga\": \"47000.0000\"\n" +
+                "                  },\n" +
+                "                  {\n" +
+                "                    \"cUnid\": \"01\",\n" +
+                "                    \"tpMed\": \"KG\",\n" +
+                "                    \"qCarga\": \"47000.0000\"\n" +
+                "                  },\n" +
+                "                  {\n" +
+                "                    \"cUnid\": \"01\",\n" +
+                "                    \"tpMed\": \"KG\",\n" +
+                "                    \"qCarga\": \"47000.0000\"\n" +
+                "                  },\n" +
+                "                  {\n" +
+                "                    \"cUnid\": \"01\",\n" +
+                "                    \"tpMed\": \"KG\",\n" +
+                "                    \"qCarga\": \"47000.0000\"\n" +
+                "                  },\n" +
+                "                  {\n" +
+                "                    \"cUnid\": \"01\",\n" +
+                "                    \"tpMed\": \"KG\",\n" +
+                "                    \"qCarga\": \"47000.0000\"\n" +
+                "                  }\n" +
+                "                ]\n" +
+                "              },\n" +
+                "              \"infDoc\": {\n" +
+                "                \"infNFe\": {\n" +
+                "                  \"chave\": \"11260205925052000435550020000001871747459136\",\n" +
+                "                  \"dPrev\": \"2026-02-28\"\n" +
+                "                }\n" +
+                "              },\n" +
+                "              \"infModal\": {\n" +
+                "                \"@attributes\": {\n" +
+                "                  \"versaoModal\": \"4.00\"\n" +
+                "                },\n" +
+                "                \"rodo\": {\n" +
+                "                  \"RNTRC\": \"05692517\"\n" +
+                "                }\n" +
+                "              }\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"infCTeSupl\": {\n" +
+                "            \"qrCodCTe\": \"https://dfe-portal.svrs.rs.gov.br/cte/qrCode?chCTe=11260250990361000109570010000000021866587552&tpAmb=1\"\n" +
+                "          },\n" +
+                "          \"Signature\": {\n" +
+                "            \"SignedInfo\": {\n" +
+                "              \"CanonicalizationMethod\": {\n" +
+                "                \"@attributes\": {\n" +
+                "                  \"Algorithm\": \"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"\n" +
+                "                }\n" +
+                "              },\n" +
+                "              \"SignatureMethod\": {\n" +
+                "                \"@attributes\": {\n" +
+                "                  \"Algorithm\": \"http://www.w3.org/2000/09/xmldsig#rsa-sha1\"\n" +
+                "                }\n" +
+                "              },\n" +
+                "              \"Reference\": {\n" +
+                "                \"@attributes\": {\n" +
+                "                  \"URI\": \"#CTe11260250990361000109570010000000021866587552\"\n" +
+                "                },\n" +
+                "                \"Transforms\": {\n" +
+                "                  \"Transform\": [\n" +
+                "                    {\n" +
+                "                      \"@attributes\": {\n" +
+                "                        \"Algorithm\": \"http://www.w3.org/2000/09/xmldsig#enveloped-signature\"\n" +
+                "                      }\n" +
+                "                    },\n" +
+                "                    {\n" +
+                "                      \"@attributes\": {\n" +
+                "                        \"Algorithm\": \"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"\n" +
+                "                      }\n" +
+                "                    }\n" +
+                "                  ]\n" +
+                "                },\n" +
+                "                \"DigestMethod\": {\n" +
+                "                  \"@attributes\": {\n" +
+                "                    \"Algorithm\": \"http://www.w3.org/2000/09/xmldsig#sha1\"\n" +
+                "                  }\n" +
+                "                },\n" +
+                "                \"DigestValue\": \"oE3qxEyuECsbpCduHg3KPnCSF9U=\"\n" +
+                "              }\n" +
+                "            },\n" +
+                "            \"SignatureValue\": \"Rggn6SZfHVKWidggz36ZSrQ2M5+muEuzVjlYcj0ZxRMsciRYEfSJDasEqMZl4EjOkpL2w1ecaXPl9cafkxggRBO3FzTt3uYL0Xl6nQFlPGIQCgAUouFZHK15h/d7I7CllJcps7Ih2mMvwKjVogRiMdIJBwMxUgilQzqPJBkZNNEpxHhRryGvverIKifxO++nSYUOT2IZyUHRinZT0j1D50Eac9ZayeXcDkIFZeJF3LK1qvWMgs0pjPFhDr/zDD4EQEm5JcvjrK3Zz7JAeRdm51JXI663xaUg/Zie2RYmbOnlnDGmmYFUAIfkf92aoa3HSqFB1shuDo3PZ0DVfVceDw==\",\n" +
+                "            \"KeyInfo\": {\n" +
+                "              \"X509Data\": {\n" +
+                "                \"X509Certificate\": \"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\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"protCTe\": {\n" +
+                "          \"@attributes\": {\n" +
+                "            \"versao\": \"4.00\"\n" +
+                "          },\n" +
+                "          \"infProt\": {\n" +
+                "            \"@attributes\": {\n" +
+                "              \"Id\": \"CTe311260003536058\"\n" +
+                "            },\n" +
+                "            \"tpAmb\": \"1\",\n" +
+                "            \"verAplic\": \"RS20260105155901\",\n" +
+                "            \"chCTe\": \"11260250990361000109570010000000021866587552\",\n" +
+                "            \"dhRecbto\": \"2026-02-28T11:46:03-03:00\",\n" +
+                "            \"nProt\": \"311260003536058\",\n" +
+                "            \"digVal\": \"oE3qxEyuECsbpCduHg3KPnCSF9U=\",\n" +
+                "            \"cStat\": \"100\",\n" +
+                "            \"xMotivo\": \"Autorizado o uso do CT-e\"\n" +
+                "          }\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }"
+
+        val xml = jacksonObjectMapper().readTree(json.trimIndent())
+        val cte = ConhecimentoTransporte(
+            id = "11260250990361000109570010000000021866587552",
+            xml = xml,
+        )
+        assertEquals("05925052000516", cte.getCpfCnpjTomador())
     }
 }
