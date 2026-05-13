@@ -4,6 +4,7 @@ import br.andrew.nota.agil.model.TipoDuplicata
 import br.andrew.nota.agil.qive.model.ConhecimentoTransporte
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class ConhecimentoTransporteTest {
@@ -820,6 +821,7 @@ class ConhecimentoTransporteTest {
         assertEquals("1825.00", cte.getValorBruto()?.toPlainString())
         assertEquals("1825.00", cte.getValorLiquido()?.toPlainString())
         assertEquals("09054087000154", cte.getCpfCnpjTomador())
+        assertEquals("SUSTENNUTRI NUTRICAO ANIMAL  - MATRIZ", cte.getNomeTomador())
     }
 
     @Test
@@ -1074,5 +1076,6 @@ class ConhecimentoTransporteTest {
             xml = xml,
         )
         assertEquals("05925052000516", cte.getCpfCnpjTomador())
+        assertEquals("FAZENDA RIO MADEIRA S/A - FARM", cte.getNomeTomador())
     }
 }

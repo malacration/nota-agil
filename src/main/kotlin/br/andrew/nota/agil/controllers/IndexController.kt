@@ -2,6 +2,7 @@ package br.andrew.nota.agil.controllers
 
 import br.andrew.nota.agil.qive.interfaces.QiveApiClient
 import br.andrew.nota.agil.qive.interfaces.ReceivedResponse
+import br.andrew.nota.agil.qive.infrastructure.QiveNfeReceivedClient
 import br.andrew.nota.agil.qive.model.ConhecimentoTransporte
 import br.andrew.nota.agil.qive.model.NotaProdutos
 import br.andrew.nota.agil.qive.model.NotaServico
@@ -18,7 +19,8 @@ import java.util.Date
 @RestController()
 class IndexController(
     val qiveApi : QiveApiClient,
-    val taskRepository: TaskRepository
+    val taskRepository: TaskRepository,
+    val qiveNfeReceivedClient: QiveNfeReceivedClient,
 ) {
 
     @GetMapping()
@@ -32,7 +34,7 @@ class IndexController(
         @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) from : Date?,
         @RequestParam("to")   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) to : Date?,
         @RequestParam(name = "cursor") cursor : Int? = null) : ReceivedResponse<NotaProdutos> {
-        return qiveApi.nfe.listReceived(listOf(cnpj),cursor,from,to)
+        return qiveNfeReceivedClient.listReceived(cnpj, cursor, from, to)
     }
 
     @GetMapping("nfe-nao-cadastradas/{cnpj}")
@@ -45,7 +47,7 @@ class IndexController(
         val from = Date.from(date.atStartOfDay(zone).toInstant())
         val to = Date.from(date.plusDays(1).atStartOfDay(zone).minusNanos(1).toInstant())
 
-        val resposta = qiveApi.nfe.listReceived(listOf(cnpj), cursor, from, to)
+        val resposta = qiveNfeReceivedClient.listReceived(cnpj, cursor, from, to)
         if (resposta.data.isEmpty()) {
             return ReceivedResponse(
                 data = emptyList(),

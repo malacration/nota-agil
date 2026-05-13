@@ -1,5 +1,6 @@
 package br.andrew.nota.agil.controllers.handler
 
+import br.andrew.nota.agil.qive.infrastructure.QiveResponseBodyCaptureException
 import jakarta.servlet.RequestDispatcher
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
@@ -36,6 +37,13 @@ class MyErrorController() : ErrorController {
             ErroDto("Acesso Negado",traceId)
         else if(statusCode == HttpStatus.NOT_FOUND.value())
             ErroDto(t.message ?: "Pagina Não encontrada",traceId,t)
+        else if(t is QiveResponseBodyCaptureException){
+            ErroDto(t.message ?: "Falha ao desserializar resposta da Qive", traceId, t).apply {
+                bodyResposta = t.responseBody
+                endpoint = t.endpoint
+                parametros = t.parametros
+            }
+        }
         else if(t is HttpClientErrorException){
             val msg = t.getResponseBodyAs(String::class.java) ?: "Erro inesperado"
             ErroDto(msg,traceId,t)
@@ -56,4 +64,3 @@ class MyErrorController() : ErrorController {
         return "false" != parameter.lowercase(Locale.getDefault())
     }
 }
-

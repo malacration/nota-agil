@@ -1,0 +1,1027 @@
+{
+  "status": {
+    "code": 200,
+    "message": "Ok"
+  },
+  "data": [
+    {
+      "access_key": "11260521571964000160550020001445301450138448",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260521571964000160550020001445301450138448",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "144530",
+              "dhEmi": "2026-05-05T17:10:44-04:00"
+            },
+            "emit": {
+              "CNPJ": "21571964000160",
+              "xNome": "AUTO POSTO XII DE OUTUBRO LTDA"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A FARM"
+            },
+            "autXML": {
+              "CPF": "97177768149"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "1",
+                "xProd": "GASOLINA COMUM",
+                "vProd": "147.00"
+              },
+              "imposto": {
+                "ICMS": {
+                  "ICMS61": {
+                    "CST": "61"
+                  }
+                }
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "147.00",
+                "vNF": "142.60"
+              }
+            },
+            "transp": {
+              "modFrete": "3",
+              "transporta": {
+                "CNPJ": "21571964000160",
+                "xNome": "POSTO XII DE OUTUBRO"
+              }
+            },
+            "pag": {
+              "detPag": {
+                "indPag": "1",
+                "tPag": "03",
+                "vPag": "142.60",
+                "card": {
+                  "tpIntegra": "1"
+                }
+              }
+            },
+            "infAdic": {
+              "infCpl": "ICMS monofasico sobre combustiveis"
+            },
+            "infRespTec": {
+              "CNPJ": "54517628000198"
+            }
+          }
+        },
+        "protNFe": {
+          "@attributes": {
+            "versao": "4.00"
+          },
+          "infProt": {
+            "chNFe": "11260521571964000160550020001445301450138448",
+            "cStat": "100"
+          }
+        }
+      }
+    },
+    {
+      "access_key": "11260506982796000101550010000368201043770293",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260506982796000101550010000368201043770293",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "36820",
+              "dhEmi": "2026-05-05T16:52:12-04:00"
+            },
+            "emit": {
+              "CNPJ": "06982796000101",
+              "xNome": "FITICAR PECAS E SERV DE AUT LTDA - ME"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A - FARM"
+            },
+            "autXML": [
+              {
+                "CPF": "22068325268"
+              },
+              {
+                "CNPJ": "00070596000104"
+              }
+            ],
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "MB4461",
+                "xProd": "SUPORTE DIANTEIRO DO MOTOR",
+                "vProd": "348.00"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "348.00",
+                "vNF": "313.20"
+              }
+            },
+            "transp": {
+              "modFrete": "1"
+            },
+            "cobr": {
+              "fat": {
+                "nFat": "762829"
+              },
+              "dup": {
+                "nDup": "001",
+                "dVenc": "2026-06-04",
+                "vDup": "313.20"
+              }
+            },
+            "pag": {
+              "detPag": {
+                "indPag": "1",
+                "tPag": "15",
+                "vPag": "313.20"
+              }
+            },
+            "infAdic": {
+              "infCpl": "MOVTO: 762829",
+              "obsCont": [
+                {
+                  "@attributes": {
+                    "xCampo": "FANT_DEST"
+                  },
+                  "xTexto": "FAZENDA SERRA VERDE"
+                }
+              ]
+            }
+          }
+        },
+        "protNFe": {
+          "@attributes": {
+            "versao": "4.00"
+          },
+          "infProt": {
+            "chNFe": "11260506982796000101550010000368201043770293",
+            "cStat": "100"
+          }
+        }
+      }
+    },
+    {
+      "access_key": "11260509196408000155550010000366931320132268",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260509196408000155550010000366931320132268",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "36693",
+              "dhEmi": "2026-05-06T08:49:09-04:00",
+              "NFref": {
+                "refNFe": "11260509196408000155550010000366861862669108"
+              }
+            },
+            "emit": {
+              "CNPJ": "09196408000155",
+              "xNome": "CAPITAL COM PECAS P/ TRATORES LTDA"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A - FARM"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "029506",
+                "xProd": "CRUZETA CARDAN SERIE 1000",
+                "vProd": "90.00"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "90.00",
+                "vNF": "90.00"
+              }
+            },
+            "transp": {
+              "modFrete": "1",
+              "vol": {
+                "qVol": "2",
+                "esp": "UN"
+              }
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "90",
+                "vPag": "0.00"
+              }
+            },
+            "infAdic": {
+              "infCpl": "ICMS COBRADO ANTERIORMENTE",
+              "obsCont": [
+                {
+                  "@attributes": {
+                    "xCampo": "PARTICIPANTE"
+                  },
+                  "xTexto": "02426 - FAZENDA SERRA VERDE"
+                }
+              ],
+              "obsFisco": {
+                "@attributes": {
+                  "xCampo": "ChaveNFE"
+                },
+                "xTexto": "11260509196408000155550010000366861862669108"
+              }
+            }
+          }
+        },
+        "protNFe": {
+          "@attributes": {
+            "versao": "4.00"
+          },
+          "infProt": {
+            "chNFe": "11260509196408000155550010000366931320132268",
+            "cStat": "100"
+          }
+        }
+      }
+    },
+    {
+      "access_key": "11260505599253000147558910070097751053178400",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260505599253000147558910070097751053178400",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "7009775",
+              "dhEmi": "2026-05-06T08:40:29-04:00"
+            },
+            "emit": {
+              "CPF": "44647662691",
+              "xNome": "JOAO DOS REIS CARDOSO"
+            },
+            "avulsa": {
+              "CNPJ": "05599253000147"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA SA FARM"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "01",
+                "xProd": "soja em graos",
+                "vProd": "144163.25"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "144163.25",
+                "vNF": "144163.25"
+              }
+            },
+            "transp": {
+              "modFrete": "9"
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "01",
+                "vPag": "144163.25"
+              }
+            },
+            "infAdic": {
+              "infAdFisco": "A licitude da operacao"
+            }
+          }
+        },
+        "protNFe": {
+          "@attributes": {
+            "versao": "4.00"
+          },
+          "infProt": {
+            "chNFe": "11260505599253000147558910070097751053178400",
+            "cStat": "100"
+          }
+        }
+      }
+    },
+    {
+      "access_key": "41260577300861000110550010000172011133642124",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe41260577300861000110550010000172011133642124",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "17201",
+              "dhEmi": "2026-05-06T09:18:00-03:00"
+            },
+            "emit": {
+              "CNPJ": "77300861000110",
+              "xNome": "FABRICA DE TRONCOS ROMANCINI LTDA"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A"
+            },
+            "autXML": {
+              "CNPJ": "77300861000110"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "68010.0001",
+                "xProd": "Trava Hidraulica Vertical Laranja",
+                "vProd": "1900.00"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "1900.00",
+                "vNF": "2161.75"
+              }
+            },
+            "transp": {
+              "modFrete": "0",
+              "vol": {
+                "qVol": "1",
+                "esp": "Volume(s)",
+                "pesoL": "12.000",
+                "pesoB": "12.000"
+              }
+            },
+            "cobr": {
+              "dup": [
+                {
+                  "nDup": "001",
+                  "dVenc": "2026-06-05",
+                  "vDup": "1080.88"
+                },
+                {
+                  "nDup": "002",
+                  "dVenc": "2026-07-05",
+                  "vDup": "1080.87"
+                }
+              ]
+            },
+            "pag": {
+              "detPag": [
+                {
+                  "tPag": "99",
+                  "vPag": "1080.88"
+                },
+                {
+                  "tPag": "99",
+                  "vPag": "1080.87"
+                }
+              ]
+            },
+            "infAdic": {
+              "infCpl": "NCM 8436.99.00"
+            }
+          }
+        },
+        "protNFe": {
+          "@attributes": {
+            "versao": "4.00"
+          },
+          "infProt": {
+            "chNFe": "41260577300861000110550010000172011133642124",
+            "cStat": "100"
+          }
+        }
+      }
+    },
+    {
+      "access_key": "11260505599253000147558910070096121053178405",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260505599253000147558910070096121053178405",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "7009612",
+              "dhEmi": "2026-05-06T08:14:05-04:00"
+            },
+            "emit": {
+              "CPF": "44647662691",
+              "xNome": "JOAO DOS REIS CARDOSO"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA SA FARM"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "01",
+                "xProd": "SOJA EM GRAOS",
+                "vProd": "38445.06"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "38445.06",
+                "vNF": "38445.06"
+              }
+            },
+            "transp": {
+              "modFrete": "9"
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "01",
+                "vPag": "38445.06"
+              }
+            },
+            "infAdic": {
+              "infAdFisco": "A licitude da operacao"
+            }
+          }
+        }
+      }
+    },
+    {
+      "access_key": "51260505850408000176550010000067551074244885",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe51260505850408000176550010000067551074244885",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "6755",
+              "dhEmi": "2026-05-06T09:56:00-04:00"
+            },
+            "emit": {
+              "CNPJ": "05850408000176",
+              "xNome": "M.M COTTON INDUSTRIA COMERCIO EXP. E IMP. LTDA"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A - FARM"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "51162",
+                "xProd": "TORTA DE ALGODAO UNICA",
+                "vProd": "37564.80"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "37564.80",
+                "vNF": "37564.80"
+              }
+            },
+            "transp": {
+              "modFrete": "1",
+              "transporta": {
+                "xNome": "FAZENDA RIO MADEIRA S/A - FARM"
+              },
+              "vol": {
+                "pesoL": "43680.000",
+                "pesoB": "43680.000"
+              }
+            },
+            "cobr": {
+              "dup": {
+                "nDup": "001",
+                "dVenc": "2026-05-11",
+                "vDup": "37564.80"
+              }
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "16",
+                "vPag": "37564.80"
+              }
+            },
+            "infAdic": {
+              "infCpl": "PEDIDO INTERNO: 859",
+              "obsCont": {
+                "@attributes": {
+                  "xCampo": "EMAILTRANSPORTADOR"
+                },
+                "xTexto": "FISCALSERVICE@GRUPOROVEMA.COM.BR"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "access_key": "11260561064929011103550010000023351655267713",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260561064929011103550010000023351655267713",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "2335",
+              "dhEmi": "2026-05-06T13:35:56-04:00"
+            },
+            "emit": {
+              "CNPJ": "61064929011103",
+              "xNome": "CORTEVA AGRISCIENCE DO BRASIL LTDA."
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S A-FARM"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "P3707VYH-B821",
+                "xProd": "SEMENTE DE MILHO HIBRIDO",
+                "vProd": "39600.82"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "0.00",
+                "vNF": "0.00"
+              }
+            },
+            "transp": {
+              "modFrete": "0",
+              "vol": []
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "90",
+                "vPag": "0.00"
+              }
+            },
+            "infAdic": {
+              "infCpl": "NOTA FISCAL DE DEBITO"
+            }
+          }
+        }
+      }
+    },
+    {
+      "access_key": "51260547180625003595550050000688331836272687",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe51260547180625003595550050000688331836272687",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "68833",
+              "dhEmi": "2026-05-06T14:15:13-04:00"
+            },
+            "emit": {
+              "CNPJ": "47180625003595",
+              "xNome": "CTVA PROTECAO DE CULTIVOS LTDA."
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A-FARM"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "000000000005009773",
+                "xProd": "DERMACOR BOMBONA 4X5L INSETICIDA",
+                "vProd": "489.85"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "0.00",
+                "vNF": "0.00"
+              }
+            },
+            "transp": {
+              "modFrete": "9"
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "90",
+                "vPag": "0.00"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "access_key": "51260547180625003595550050000688491905034735",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe51260547180625003595550050000688491905034735",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "68849",
+              "dhEmi": "2026-05-06T14:20:13-04:00"
+            },
+            "emit": {
+              "CNPJ": "47180625003595",
+              "xNome": "CTVA PROTECAO DE CULTIVOS LTDA."
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A-FARM"
+            },
+            "det": [
+              {
+                "@attributes": {
+                  "nItem": "1"
+                },
+                "prod": {
+                  "cProd": "000000000005009772",
+                  "xProd": "DERMACOR FRASCO 12X1L INSETICIDA",
+                  "vProd": "3566.14"
+                }
+              },
+              {
+                "@attributes": {
+                  "nItem": "2"
+                },
+                "prod": {
+                  "cProd": "000000000005582630",
+                  "xProd": "LANNATE BR BOMBONA 20L INSETICIDA",
+                  "vProd": "5079.32"
+                }
+              }
+            ],
+            "total": {
+              "ICMSTot": {
+                "vProd": "0.00",
+                "vNF": "0.00"
+              }
+            },
+            "transp": {
+              "modFrete": "9"
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "90",
+                "vPag": "0.00"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "access_key": "11260509196408000155550010000366941714814756",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260509196408000155550010000366941714814756",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "36694",
+              "dhEmi": "2026-05-06T08:49:49-04:00"
+            },
+            "emit": {
+              "CNPJ": "09196408000155",
+              "xNome": "CAPITAL COM PECAS P/ TRATORES LTDA"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A - FARM"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "033054",
+                "xProd": "TERMINAL DIRECAO MF",
+                "vProd": "415.00"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "415.00",
+                "vNF": "415.00"
+              }
+            },
+            "transp": {
+              "modFrete": "1",
+              "vol": {
+                "qVol": "1",
+                "esp": "UN"
+              }
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "90",
+                "vPag": "0.00"
+              }
+            },
+            "infAdic": {
+              "infCpl": "ICMS COBRADO ANTERIORMENTE",
+              "obsCont": [
+                {
+                  "@attributes": {
+                    "xCampo": "PARTICIPANTE"
+                  },
+                  "xTexto": "02426 - FAZENDA SERRA VERDE"
+                }
+              ],
+              "obsFisco": {
+                "@attributes": {
+                  "xCampo": "ChaveNFE"
+                },
+                "xTexto": "11260509196408000155550010000366851865267488"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "access_key": "51260547180625003595550050000688601133051080",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe51260547180625003595550050000688601133051080",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "68860",
+              "dhEmi": "2026-05-06T14:20:20-04:00"
+            },
+            "emit": {
+              "CNPJ": "47180625003595",
+              "xNome": "CTVA PROTECAO DE CULTIVOS LTDA."
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A-FARM"
+            },
+            "det": [
+              {
+                "@attributes": {
+                  "nItem": "1"
+                },
+                "prod": {
+                  "cProd": "000000000005031950",
+                  "xProd": "EXALT FRASCO 12X1L INSETICIDA",
+                  "vProd": "2177.07"
+                }
+              },
+              {
+                "@attributes": {
+                  "nItem": "2"
+                },
+                "prod": {
+                  "cProd": "000000000005050347",
+                  "xProd": "EXALT BOMBONA 4X5L INSETICIDA",
+                  "vProd": "907.10"
+                }
+              }
+            ],
+            "total": {
+              "ICMSTot": {
+                "vProd": "0.00",
+                "vNF": "0.00"
+              }
+            },
+            "transp": {
+              "modFrete": "9"
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "90",
+                "vPag": "0.00"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "access_key": "11260509054087000154550020000031761911568816",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260509054087000154550020000031761911568816",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "3176",
+              "dhEmi": "2026-05-06T13:19:00-04:00"
+            },
+            "emit": {
+              "CNPJ": "09054087000154",
+              "xNome": "SUSTENNUTRI NUTRICAO ANIMAL LTDA"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA | SERRA VERDE"
+            },
+            "det": {
+              "@attributes": {
+                "nItem": "1"
+              },
+              "prod": {
+                "cProd": "PAC0000304",
+                "xProd": "SORGO GRANEL",
+                "vProd": "27918.16"
+              }
+            },
+            "total": {
+              "ICMSTot": {
+                "vProd": "27918.16",
+                "vNF": "24629.29"
+              }
+            },
+            "transp": {
+              "modFrete": "0",
+              "transporta": {
+                "CNPJ": "05925052000516",
+                "xNome": "FAZENDA RIO MADEIRA S/A - FARM"
+              },
+              "vol": {
+                "qVol": "0",
+                "nVol": "0",
+                "pesoL": "23050.000",
+                "pesoB": "0.000"
+              }
+            },
+            "cobr": {
+              "dup": {
+                "nDup": "001",
+                "dVenc": "2026-06-05",
+                "vDup": "24629.29"
+              }
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "15",
+                "vPag": "24629.29"
+              }
+            },
+            "infAdic": {
+              "infCpl": "Beneficio fiscal aplicado"
+            }
+          }
+        }
+      }
+    },
+    {
+      "access_key": "11260538229511000152550010000033951000033965",
+      "xml": {
+        "@attributes": {
+          "versao": "4.00"
+        },
+        "NFe": {
+          "infNFe": {
+            "@attributes": {
+              "Id": "NFe11260538229511000152550010000033951000033965",
+              "versao": "4.00"
+            },
+            "ide": {
+              "nNF": "3395",
+              "dhEmi": "2026-05-06T11:34:11-04:00"
+            },
+            "emit": {
+              "CNPJ": "38229511000152",
+              "xNome": "M C DE A SANTIAGO & C J DO NASCIMENT"
+            },
+            "dest": {
+              "CNPJ": "05925052000435",
+              "xNome": "FAZENDA RIO MADEIRA S/A - FARM - FAZENDA"
+            },
+            "det": [
+              {
+                "@attributes": {
+                  "nItem": "1"
+                },
+                "prod": {
+                  "cProd": "4172",
+                  "xProd": "ADAPTADOR SOLD CURTO 50MM",
+                  "vProd": "60.00"
+                }
+              },
+              {
+                "@attributes": {
+                  "nItem": "2"
+                },
+                "prod": {
+                  "cProd": "10328",
+                  "xProd": "ADESIVO PLASTICO EXTRA FORTE 175G",
+                  "vProd": "70.00"
+                }
+              }
+            ],
+            "total": {
+              "ICMSTot": {
+                "vProd": "359.00",
+                "vNF": "359.00"
+              }
+            },
+            "transp": {
+              "modFrete": "9"
+            },
+            "pag": {
+              "detPag": {
+                "tPag": "90",
+                "vPag": "0.00"
+              }
+            },
+            "infAdic": {
+              "infCpl": "Devolucao Referente a Nota Fiscal: 3359"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "page": {
+    "next": "https://api.arquivei.com.br/v1/nfe/received?cursor=41666",
+    "previous": "https://api.arquivei.com.br/v1/nfe/received?cursor=0"
+  },
+  "count": 14,
+  "signature": "bef8e6b2468970a8acf96e0c4f1f97dbe936dbef1103220f1d526d4af89cb4dd"
+}

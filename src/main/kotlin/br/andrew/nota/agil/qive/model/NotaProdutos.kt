@@ -347,7 +347,8 @@ data class ICMSTot(
 data class Transp(
     var modFrete: String? = null,
     var transporta: Transporta? = null,
-    var vol: Vol? = null
+    @JsonFormat(with = [JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY])
+    var vol: List<Vol>? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
