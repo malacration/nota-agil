@@ -17,9 +17,13 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import java.util.regex.Pattern
 
 @RestController()
@@ -67,5 +71,34 @@ class TasksController(
     fun execute(@PathVariable id : String) {
         val task = repository.findById(id).orElseThrow { Exception("Task $id nao encontrada") }
         return service.executa(task)
+    }
+
+    @PutMapping("/{id}/status")
+    fun updateStatus(
+        @PathVariable id: String,
+        @RequestBody request: UpdateTaskStatusRequest,
+    ): Task {
+        return service.updateStatus(id, request.toTaskStatus())
+    }
+}
+
+data class UpdateTaskStatusRequest(
+    val status: String,
+) {
+    fun toTaskStatus(): TaskStatus {
+        val normalized = status.trim().uppercase()
+
+        if (normalized.isBlank()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Campo status e obrigatorio")
+        }
+
+        return try {
+            TaskStatus.valueOf(normalized)
+        } catch (_: IllegalArgumentException) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Status invalido. Use READY, FAILED ou FINISHED",
+            )
+        }
     }
 }

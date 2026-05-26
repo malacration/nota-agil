@@ -13,6 +13,8 @@ import br.andrew.nota.agil.softexpert.service.WorkFlowEnvrioment
 import br.andrew.nota.agil.softexpert.service.WorkFlowService
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Service
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 @EnableConfigurationProperties(WorkFlowEnvrioment::class)
@@ -24,6 +26,24 @@ class TaskService(
     val qiveApi : QiveApiClient,
 
 ) {
+    fun updateStatus(id: String, newStatus: TaskStatus): Task {
+        val task = taskRepository.findById(id)
+            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Task $id nao encontrada") }
+        val currentStatus = task.status
+
+        if (currentStatus == newStatus) {
+            return task
+        }
+
+        try {
+            task.changeStatus(newStatus)
+        } catch (e: IllegalStateException) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
+        }
+
+        return taskRepository.save(task)
+    }
+
     fun executa(task : Task){
         if(task.status == TaskStatus.FINISHED){
             return

@@ -29,6 +29,27 @@ class Task(
         return recordID
     }
 
+    fun changeStatus(newStatus: TaskStatus) {
+        if (status == newStatus) {
+            return
+        }
+
+        val allowedTransitions = when (status) {
+            TaskStatus.READY -> setOf(TaskStatus.FAILED)
+            TaskStatus.FAILED -> setOf(TaskStatus.READY)
+            TaskStatus.FINISHED -> emptySet()
+        }
+
+        if (newStatus !in allowedTransitions) {
+            throw IllegalStateException(
+                "Nao e permitido alterar status manualmente de $status para $newStatus. " +
+                    "Transicoes permitidas: READY <-> FAILED.",
+            )
+        }
+
+        status = newStatus
+    }
+
     init{
         if(taskType == TaskTypes.CreateTask && duplicata == null)
             throw Exception("Nao é permitido tarefa de criar com duplicata null")
