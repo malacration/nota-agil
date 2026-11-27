@@ -19,11 +19,14 @@ import org.springframework.dao.DuplicateKeyException
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
+import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 import java.util.Date
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Notas fiscais de entrada (contas a pagar) dos ERPs como fonte alternativa ao Qive. Uma unica
@@ -53,6 +56,10 @@ class NotasErpService(
     private val trava: TravaNotas,
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
+    /** Ultima carga do catalogo de filiais por ERP; mapa null = indisponivel/vazio naquela carga. */
+    private val catalogos = ConcurrentHashMap<Erp, Pair<Map<String, Set<Int>>?, Instant>>()
+    private val travasCatalogo = ConcurrentHashMap<Erp, Any>()
+    internal var agora: () -> Instant = Instant::now
     private val porErp = clients.associateBy { it.erp }.also {
         require(it.size == clients.size) { "Mais de uma fonte de notas para o mesmo ERP" }
     }
@@ -63,11 +70,59 @@ class NotasErpService(
         ErpNotasDisponivel(it.erp, it.nome, situacao.disponivel, situacao.habilitado, situacao.configurado, situacao.motivo)
     }
 
-    /** Empresas cadastradas que o usuario pode ver ([visivel]) e se cada uma pode listar notas no [erp]. */
+    /**
+     * Empresas cadastradas que sao do [erp] e que o usuario pode ver ([visivel]), cada uma com o
+     * motivo se nao puder listar notas (ex.: Dealer sem codigo).
+     *
+     * "Do ERP" pelo catalogo de filiais do proprio ERP ([NotasEntradaErpClient.filiais], em cache por
+     * [TTL_CATALOGO]): SAP = CNPJ entre as filiais (BusinessPlaces); Dealer = CNPJ entre as empresas
+     * do dealerlenium e, se a empresa tem codigo do Dealer, um dos codigos daquele CNPJ (sem codigo
+     * ela aparece, com o motivo). Catalogo indisponivel (ERP desligado, sem conexao, com erro ou
+     * vazio): usa o cadastro, `erpPagamento == erp` ou, no Dealer, codigo do Dealer preenchido. Empresa nos dois
+     * ERPs aparece nas duas listas.
+     */
     fun empresas(erp: Erp, visivel: (Company) -> Boolean): List<EmpresaNotasErp> {
         val client = porErp[erp] ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "ERP sem fonte de notas")
-        return empresas.findAll().filter { it.cnpj != "all" && visivel(it) }.sortedBy { it.nome }
+        val catalogo = catalogoFiliais(client)
+        return empresas.findAll()
+            .filter { it.cnpj != "all" && pertence(erp, it, catalogo) && visivel(it) }
+            .sortedBy { it.nome }
             .map { EmpresaNotasErp(it.cnpj, it.nome, client.motivoEmpresaIndisponivel(it)) }
+    }
+
+    /**
+     * Filiais do ERP: CNPJ -> codigos do Dealer (vazio no SAP). Null = catalogo indisponivel (usa o
+     * cadastro). Uma carga por ERP de cada vez (quem chega durante a carga espera e usa o resultado
+     * dela), entao uma resposta antiga nunca substitui uma mais nova. Catalogo vazio (resposta sem
+     * corpo vira lista vazia nos clients) nao e confiavel: vale como indisponivel. Indisponivel fica
+     * lembrado por [ESPERA_CATALOGO_INDISPONIVEL] para nao repetir a chamada a cada requisicao.
+     */
+    private fun catalogoFiliais(client: NotasEntradaErpClient): Map<String, Set<Int>>? {
+        if (!client.situacao().disponivel) return null
+        synchronized(travasCatalogo.computeIfAbsent(client.erp) { Any() }) {
+            catalogos[client.erp]?.let { (mapa, em) ->
+                val validade = if (mapa == null) ESPERA_CATALOGO_INDISPONIVEL else TTL_CATALOGO
+                if (Duration.between(em, agora()) < validade) return mapa
+            }
+            val mapa = try {
+                client.filiais()
+                    .groupBy({ it.cnpj.filter(Char::isDigit) }, { it.codigoDealer })
+                    .mapValues { (_, codigos) -> codigos.filterNotNull().toSet() }
+                    .takeIf { it.isNotEmpty() }
+                    .also { if (it == null) log.warn("Filiais do {} vieram vazias; empresas filtradas pelo cadastro", client.nome) }
+            } catch (e: Exception) {
+                log.warn("Filiais do {} indisponiveis; empresas filtradas pelo cadastro ({})", client.nome, e.javaClass.simpleName)
+                null
+            }
+            catalogos[client.erp] = mapa to agora()
+            return mapa
+        }
+    }
+
+    private fun pertence(erp: Erp, empresa: Company, catalogo: Map<String, Set<Int>>?): Boolean {
+        if (catalogo == null) return empresa.erpPagamento == erp || (erp == Erp.DEALER && (empresa.codigoDealer ?: 0) > 0)
+        val codigos = catalogo[empresa.cnpj] ?: return false
+        return erp != Erp.DEALER || empresa.codigoDealer == null || empresa.codigoDealer in codigos
     }
 
     /** [autorizar] recebe a empresa cadastrada e lanca 403 se o usuario nao pode usa-la. */
@@ -223,6 +278,10 @@ class NotasErpService(
     companion object {
         const val MAX_IMPORTACAO = 100
         const val MAX_DIAS = 31L
+        /** Validade do catalogo de filiais de cada ERP usado para montar a lista de empresas. */
+        val TTL_CATALOGO: Duration = Duration.ofMinutes(10)
+        /** Catalogo indisponivel ou vazio: tempo ate tentar o ERP de novo (enquanto isso, o cadastro). */
+        val ESPERA_CATALOGO_INDISPONIVEL: Duration = Duration.ofSeconds(30)
         private val CHAVE_44 = Regex("[0-9]{44}")
 
         fun origem(erp: Erp): OrigemNota = when (erp) {

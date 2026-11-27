@@ -1,5 +1,6 @@
 package br.andrew.nota.agil.services
 
+import br.andrew.nota.agil.erp.notas.FilialErp
 import br.andrew.nota.agil.erp.notas.FiltroNotasErp
 import br.andrew.nota.agil.erp.notas.NotaEntradaErp
 import br.andrew.nota.agil.erp.notas.NotasEntradaErpClient
@@ -38,6 +39,7 @@ import org.mockito.Mockito.`when`
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.math.BigDecimal
+import java.time.Instant
 import java.util.Date
 import java.util.Optional
 
@@ -58,7 +60,16 @@ class NotasErpServiceTest {
             if (erp == Erp.DEALER && empresa.codigoDealer == null) "Empresa sem codigo no Dealer" else null
         override fun listar(empresa: Company, filtro: FiltroNotasErp) = notas.also { filtros += filtro }
         override fun buscar(empresa: Company, ids: List<String>) = notas.filter { it.id in ids }.also { buscados += ids }
-        override fun filiais() = emptyList<br.andrew.nota.agil.erp.notas.FilialErp>()
+        var filiais: List<br.andrew.nota.agil.erp.notas.FilialErp> = emptyList()
+        var falhaFiliais = false
+        @Volatile var consultasFiliais = 0
+        var antesDeResponder: () -> Unit = {}
+        override fun filiais(): List<br.andrew.nota.agil.erp.notas.FilialErp> {
+            synchronized(this) { consultasFiliais++ }
+            antesDeResponder()
+            if (falhaFiliais) throw ResponseStatusException(HttpStatus.BAD_GATEWAY, "ERP fora")
+            return filiais
+        }
     }
 
     private val sap = FonteFake(Erp.SAP)
@@ -120,6 +131,8 @@ class NotasErpServiceTest {
             service.listar(Erp.DEALER, cnpj, "2026-11-01", "2026-11-02", null, null, livre)
         }.statusCode)
         `when`(empresas.findAll()).thenReturn(listOf(Company(cnpj, "Empresa X"), Company("all", "all")))
+        dealer.filiais = listOf(br.andrew.nota.agil.erp.notas.FilialErp(cnpj, "Empresa X", codigoDealer = 7))
+        sap.filiais = listOf(br.andrew.nota.agil.erp.notas.FilialErp(cnpj, "Empresa X"))
         assertEquals("Empresa sem codigo no Dealer", service.empresas(Erp.DEALER) { true }.single().motivoIndisponivel)
         assertNull(service.empresas(Erp.SAP) { true }.single().motivoIndisponivel)
     }
@@ -233,6 +246,86 @@ class NotasErpServiceTest {
         assertFalse(NotasErpService.existeCreateTaskEquivalente(tasks, duplicata))
     }
 
+    // ------------------------------------------------------------ empresas por ERP
+
+    private val soSap = Company("11111111000111", "So SAP", erpPagamento = Erp.SAP)
+    private val soDealer = Company("22222222000122", "So Dealer", codigoDealer = 5)
+    private val ambos = Company("33333333000133", "Nos dois", erpPagamento = Erp.SAP, codigoDealer = 6)
+    private val outroCodigo = Company("44444444000144", "Codigo de outra empresa", codigoDealer = 9)
+
+    private fun catalogosDosDoisErps() {
+        `when`(empresas.findAll()).thenReturn(listOf(soSap, soDealer, ambos, outroCodigo, Company("all", "all")))
+        sap.filiais = listOf(FilialErp(soSap.cnpj, "S1"), FilialErp(ambos.cnpj, "S2"))
+        dealer.filiais = listOf(FilialErp(soDealer.cnpj, "D1", codigoDealer = 5), FilialErp(ambos.cnpj, "D2", codigoDealer = 6),
+            FilialErp(outroCodigo.cnpj, "D3", codigoDealer = 8))
+    }
+
+    @Test
+    fun `cada ERP lista so as empresas do seu catalogo, e a que esta nos dois aparece nos dois`() {
+        catalogosDosDoisErps()
+        assertEquals(listOf(ambos.cnpj, soSap.cnpj), service.empresas(Erp.SAP) { true }.map { it.cnpj })
+        // Dealer: CNPJ no catalogo e o codigo cadastrado tem de ser um dos daquele CNPJ.
+        assertEquals(listOf(ambos.cnpj, soDealer.cnpj), service.empresas(Erp.DEALER) { true }.map { it.cnpj })
+        // Catalogo em cache: nao consulta o ERP a cada abertura da tela.
+        service.empresas(Erp.SAP) { true }
+        assertEquals(1, sap.consultasFiliais)
+    }
+
+    @Test
+    fun `catalogo indisponivel usa o cadastro sem derrubar a lista`() {
+        catalogosDosDoisErps()
+        sap.falhaFiliais = true
+        assertEquals(listOf(ambos.cnpj, soSap.cnpj), service.empresas(Erp.SAP) { true }.map { it.cnpj })
+        dealer.situacao = SituacaoNotasErp(habilitado = true, configurado = false)
+        assertEquals(listOf(outroCodigo.cnpj, ambos.cnpj, soDealer.cnpj), service.empresas(Erp.DEALER) { true }.map { it.cnpj })
+        assertEquals(0, dealer.consultasFiliais, "sem conexao configurada nem tenta o catalogo")
+        // Falha fica lembrada so por alguns segundos; depois volta ao catalogo quando o ERP responde.
+        sap.falhaFiliais = false
+        service.empresas(Erp.SAP) { true }
+        assertEquals(1, sap.consultasFiliais, "dentro da espera nao repete a chamada")
+        service.agora = { Instant.now().plus(NotasErpService.ESPERA_CATALOGO_INDISPONIVEL).plusSeconds(1) }
+        assertEquals(listOf(ambos.cnpj, soSap.cnpj), service.empresas(Erp.SAP) { true }.map { it.cnpj })
+        assertEquals(2, sap.consultasFiliais)
+    }
+
+    @Test
+    fun `catalogo vazio nao e confiavel - usa o cadastro e nao fica em cache como valido`() {
+        catalogosDosDoisErps()
+        sap.filiais = emptyList()
+        assertEquals(listOf(ambos.cnpj, soSap.cnpj), service.empresas(Erp.SAP) { true }.map { it.cnpj })
+        // Depois da espera curta, o catalogo real e usado (o vazio nao ficou 10 min).
+        sap.filiais = listOf(FilialErp(soSap.cnpj, "S1"))
+        service.agora = { Instant.now().plus(NotasErpService.ESPERA_CATALOGO_INDISPONIVEL).plusSeconds(1) }
+        assertEquals(listOf(soSap.cnpj), service.empresas(Erp.SAP) { true }.map { it.cnpj })
+    }
+
+    @Test
+    fun `cargas concorrentes do catalogo fazem uma chamada so ao ERP`() {
+        catalogosDosDoisErps()
+        val dentro = CountDownLatch(1)
+        val liberar = CountDownLatch(1)
+        sap.antesDeResponder = { dentro.countDown(); liberar.await(5, TimeUnit.SECONDS) }
+        val executor = Executors.newFixedThreadPool(4)
+        try {
+            val primeira = executor.submit<List<String>> { service.empresas(Erp.SAP) { true }.map { it.cnpj } }
+            assertTrue(dentro.await(5, TimeUnit.SECONDS))
+            val outras = (1..3).map { executor.submit<List<String>> { service.empresas(Erp.SAP) { true }.map { it.cnpj } } }
+            Thread.sleep(100)
+            liberar.countDown()
+            (outras + primeira).forEach { assertEquals(listOf(ambos.cnpj, soSap.cnpj), it.get(5, TimeUnit.SECONDS)) }
+        } finally {
+            executor.shutdownNow()
+        }
+        assertEquals(1, sap.consultasFiliais)
+    }
+
+    @Test
+    fun `visibilidade do operador continua aplicada sobre as empresas do ERP`() {
+        catalogosDosDoisErps()
+        assertEquals(listOf(soSap.cnpj), service.empresas(Erp.SAP) { it.cnpj != ambos.cnpj }.map { it.cnpj })
+        assertEquals(emptyList<String>(), service.empresas(Erp.DEALER) { false }.map { it.cnpj })
+    }
+
     // ------------------------------------------------------------ autorizacao, numeros e concorrencia
 
     @Test
@@ -343,6 +436,8 @@ class NotasErpServiceTest {
         assertTrue(dealer.filtros.isEmpty())
         assertTrue(dealer.buscados.isEmpty())
         `when`(empresas.findAll()).thenReturn(listOf(Company(cnpj, "Empresa X", codigoDealer = 2), Company("22222222000122", "Y", codigoDealer = 1)))
+        dealer.filiais = listOf(br.andrew.nota.agil.erp.notas.FilialErp(cnpj, "X", codigoDealer = 2),
+            br.andrew.nota.agil.erp.notas.FilialErp("22222222000122", "Y", codigoDealer = 1))
         assertEquals(listOf("22222222000122"), service.empresas(Erp.DEALER) { it.codigoDealer == 1 }.map { it.cnpj })
     }
 
