@@ -6,18 +6,17 @@ import org.springframework.web.service.annotation.GetExchange
 import org.springframework.web.service.annotation.HttpExchange
 import org.springframework.web.service.annotation.PostExchange
 
-@HttpExchange("/apigateway/softexpert/rest")
-//@HttpExchange("/apigateway/se/exp/chatbot/api")
+@HttpExchange("/apigateway/se/exp/chatbot/api")
 interface Workflow {
 
     @GetExchange("/instance.php")
     fun search(
-        @RequestParam("cdUser") cdUser : Int,
+        @RequestParam("cdUser") cdUser : String,
         @RequestParam("cdProduct") cdProduct: Number = 39,
         @RequestParam("fgLanguage") fgLanguage : Int? = null,
         @RequestParam("fgStatus") fgStatus : Int? = null,
         @RequestParam("qtLimit") qtLimit : Int? = null,
-    ): String
+    ): SoftExpertResponse<SoftExpertResults<WorkflowInstance>>
 
     @PostExchange("/instance.php")
     fun create(

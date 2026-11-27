@@ -82,6 +82,9 @@ tasks.buildDependents {
 
 tasks.register("import-ws") {
     val packgePrefix = "br.andrew.wsdl"
+    // A geracao so precisa repetir quando um WSDL ou suas dependencias mudarem.
+    inputs.files(fileTree("src/main/resources/wsdl"))
+    outputs.dir(wsdlDir)
     fileTree("src/main/resources/wsdl").forEach{ file ->
         val packageName = file.nameWithoutExtension
         doLast {

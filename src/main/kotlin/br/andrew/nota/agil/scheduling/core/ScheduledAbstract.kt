@@ -55,6 +55,17 @@ abstract class ScheduledAbstract(
         updateEnabled(false)
     }
 
+    /**
+     * Para o agendamento SEM gravar enabled=false (desvinculo da empresa do Qive): se a empresa for
+     * vinculada de novo, o job recriado le enabled=true e volta a rodar. [stop] e o desligamento
+     * manual, que persiste.
+     */
+    @Synchronized
+    fun pause() {
+        future?.cancel(false)
+        future = null
+    }
+
     fun runOnce() = tick()
 
     fun isRunning(): Boolean =
@@ -134,8 +145,16 @@ abstract class ScheduledAbstract(
     private fun updateEnabled(enabled: Boolean) {
         val state = getJobState()
         if (state.enabled == enabled) return
-        state.enabled = enabled
-        jobStateRepository.save(state)
+        // So o campo enabled: nao sobrescreve cursor/lastFrom de uma execucao em andamento.
+        jobStateRepository.salvarEnabled(state.id, enabled)
+    }
+
+    /**
+     * Grava o progresso da execucao (cursor/lastFrom) sem o `enabled` lido no inicio dela: um
+     * stop/start manual feito durante a execucao (ex.: depois de pause + religar a empresa) vale.
+     */
+    protected fun salvarProgresso(state: JobState) {
+        jobStateRepository.salvarProgresso(state.id, state.cursor, state.lastFrom)
     }
 
     /** Sobrescreva se quiser logar/tratar erros. */

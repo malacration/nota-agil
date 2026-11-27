@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.regex.Pattern
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.http.ResponseEntity
 
 @RestController()
 @RequestMapping("/tasks")
@@ -44,6 +46,7 @@ class TasksController(
         @RequestParam(required = false) tomador: String?,
     ): Page<Task> {
         val sort = Sort.by(Sort.Order.desc("createdAt"))
+        if (page.pageSize !in 1..100) throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Use size entre 1 e 100")
         val enforced = PageRequest.of(page.pageNumber, page.pageSize, sort)
         val query = Query()
 
@@ -51,7 +54,12 @@ class TasksController(
         status?.let { query.addCriteria(Criteria.where("status").`is`(it)) }
         tomador?.trim()?.takeIf { it.isNotBlank() }?.let {
             query.addCriteria(
-                Criteria.where("duplicata.razaoTomador").regex(Pattern.quote(it), "i"),
+                Criteria().orOperator(
+                    Criteria.where("duplicata.razaoTomador").regex(Pattern.quote(it), "i"),
+                    Criteria.where("duplicata.cpfCnpjTomador").regex(Pattern.quote(it), "i"),
+                    Criteria.where("tomador").regex(Pattern.quote(it), "i"),
+                    Criteria.where("consultaErp.requisicao.cpfCnpjTomador").regex(Pattern.quote(it), "i"),
+                ),
             )
         }
 
@@ -80,6 +88,10 @@ class TasksController(
     ): Task {
         return service.updateStatus(id, request.toTaskStatus())
     }
+
+    @ExceptionHandler(ResponseStatusException::class)
+    fun erroStatus(error: ResponseStatusException): ResponseEntity<Map<String, String>> =
+        ResponseEntity.status(error.statusCode).body(mapOf("mensagem" to (error.reason ?: "Erro na task")))
 }
 
 data class UpdateTaskStatusRequest(

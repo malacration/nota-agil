@@ -62,9 +62,28 @@ class WorkFlowService(
         }
     }
 
-    fun executaAtividade(workflowId : String, atividade : String, actionSequence : Int = 1): ExecuteActivityResponseType {
+    fun atualizaFormulario(workflowId: String, tabela: String, campos: Map<String, String>) {
+        val resposta = wsdl.editEntityRecord(EditEntityRecordRequestType().also { request ->
+            request.workflowID = workflowId
+            request.entityID = tabela
+            request.entityAttributeList = campos.map { (campo, valor) ->
+                AttributeData().also {
+                    it.entityAttributeID = campo
+                    it.entityAttributeValue = valor
+                }
+            }.toTypedArray()
+        })
+        check(resposta.status == "SUCCESS") { "Erro ao atualizar formulario SE: ${resposta.detail}" }
+    }
+
+    fun registraComentario(workflowId: String, atividade: String, texto: String) {
+        val resposta = wsdl.newComment(NewCommentRequestType(workflowId, atividade, texto, BigInteger.ZERO, null))
+        check(resposta.status == "SUCCESS") { "Erro ao registrar resultado no SE: ${resposta.detail}" }
+    }
+
+    fun executaAtividade(workflowId : String, atividade : String, actionSequence : Int = 1, activityOrder: Int? = null): ExecuteActivityResponseType {
         return this.wsdl.executeActivity(ExecuteActivityRequestType(
-            workflowId,atividade, BigInteger(actionSequence.toString()),null,null)
+            workflowId,atividade, BigInteger(actionSequence.toString()),null,activityOrder?.toBigInteger())
         )
     }
 }

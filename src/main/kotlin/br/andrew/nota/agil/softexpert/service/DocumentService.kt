@@ -24,8 +24,14 @@ class DocumentService(
         pdf : DocumentPdfResponse,
         title: String,
         category: String,
+        date : Date = Date()): NewDocument2ResponseType? = save(pdf.data.decodePdf(), title, category, date)
+
+    /** Mesmo cadastro de documento no SE, a partir dos bytes do PDF (ex.: anexo da nota no SAP). */
+    fun save(
+        bytesPdf : ByteArray,
+        title: String,
+        category: String,
         date : Date = Date()): NewDocument2ResponseType? {
-        val bytesPdf = pdf.data.decodePdf()
         val ext = MimeTypes.getDefaultMimeTypes().forName(Tika().detect(bytesPdf)).extension
         return wsdl.newDocument2(NewDocument2RequestType(category,
             "",

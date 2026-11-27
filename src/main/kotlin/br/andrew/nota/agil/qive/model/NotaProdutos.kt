@@ -30,7 +30,11 @@ data class NotaProdutos(
         getNumero() ?: throw Exception("Erro ao pegar número da nota"),
         TipoDuplicata.Nfe,
         chaveAcesso = id,
+        serie = getSerie(),
     )
+
+    /** ide/serie (sem zeros a esquerda); a chave de acesso traz a mesma serie com 3 digitos. */
+    fun getSerie(): String? = xml?.nfe?.infNFe?.ide?.serie?.trim()?.takeIf { it.isNotEmpty() }
 
     fun getDataEmissao(): Date? =
         xml?.nfe?.infNFe?.ide?.dhEmi?.toFiscalDate()
@@ -76,6 +80,7 @@ class InfNFe(
 @JsonIgnoreProperties(ignoreUnknown = true)
 class Ide(
     var nNF: String? = null,
+    var serie: String? = null,
     var dhEmi: String? = null,
 )
 

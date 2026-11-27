@@ -4,6 +4,7 @@ import br.andrew.nota.agil.model.Duplicata
 import br.andrew.nota.agil.model.TipoDuplicata
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.JsonNode
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
@@ -29,7 +30,25 @@ data class NotaServico(
         getNumero() ?: throw Exception("Erro ao pegar numero da nota"),
         TipoDuplicata.Nfse,
         chaveAcesso = getChaveAcesso(),
+        serie = getSerie(),
+        chaveFiscal = getChaveFiscal(),
     )
+
+    /**
+     * Chave fiscal da NFS-e, como o SAP (TaxPlus) grava em OPCH.U_ChaveAcesso: `InfNfse/@Id` sem o
+     * prefixo "NFS" (50 digitos, NFS-e nacional) ou o id `DPS` + 42. Id municipal (outro formato)
+     * nao e chave: null. Diferente de [getChaveAcesso], que e o id do Qive (download do PDF).
+     */
+    fun getChaveFiscal(): String? = Duplicata.chaveFiscalNfse(xml?.nfse?.infNfse?.attributes?.Id)
+
+    /**
+     * Serie do RPS/DPS (`Rps/IdentificacaoRps/Serie`): a NFS-e em si nao tem serie. O Qive manda
+     * `Rps` como `[]` quando nao ha RPS, por isso a leitura e pelo no JSON.
+     */
+    fun getSerie(): String? =
+        xml?.nfse?.infNfse?.declaracaoPrestacaoServico?.infDeclaracaoPrestacaoServico?.rps
+            ?.path("IdentificacaoRps")?.path("Serie")
+            ?.takeIf { it.isValueNode }?.asText()?.trim()?.takeIf { it.isNotEmpty() }
 
     fun getChaveAcesso(): String? =
         id.takeIf { it.isNotBlank() }
@@ -145,6 +164,8 @@ class DeclaracaoPrestacaoServico(
 class InfDeclaracaoPrestacaoServico(
     @JsonProperty("@attributes")
     var attributes: DpsAttributes? = null,
+    @JsonProperty("Rps")
+    var rps: JsonNode? = null,
     @JsonProperty("Servico")
     var servico: Servico? = null,
     @JsonProperty("Tomador")

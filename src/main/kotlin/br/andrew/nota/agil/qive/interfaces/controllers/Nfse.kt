@@ -23,6 +23,13 @@ interface Nfse {
         @RequestParam("format_type") format : String = "JSON"
     ): ReceivedResponse<NotaServico>
 
+    /** Busca exata pelo id do Qive (`id[]`; escalar da 400). Somente leitura. */
+    @GetExchange("/received")
+    fun receivedPorId(
+        @RequestParam("id[]") ids: List<String>,
+        @RequestParam("format_type") format : String = "JSON"
+    ): ReceivedResponse<NotaServico>
+
     @GetExchange("/events")
     fun events(
         @RequestParam("access_key") accessKey: String? = null,

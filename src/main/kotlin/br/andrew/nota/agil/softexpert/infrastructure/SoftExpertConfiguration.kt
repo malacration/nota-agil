@@ -8,5 +8,6 @@ import org.springframework.validation.annotation.Validated
 @ConfigurationProperties(prefix = "softexpert.api")
 data class SoftExpertConfiguration(
     @field:NotBlank val url: String,
-    @field:NotBlank val authorization: String
+    @field:NotBlank val authorization: String,
+    val cdUser: String? = null,
 )

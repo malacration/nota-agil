@@ -1,7 +1,11 @@
 package br.andrew.nota.agil.services
 
+import br.andrew.nota.agil.erp.sap.SapNotasEntradaClient
+import br.andrew.nota.agil.model.erp.Erp
 import br.andrew.nota.agil.model.Duplicata
 import br.andrew.nota.agil.model.TipoDuplicata
+import br.andrew.nota.agil.model.erp.ConsultaErpListItem
+import br.andrew.nota.agil.model.tasks.OrigemNota
 import br.andrew.nota.agil.model.tasks.Task
 import br.andrew.nota.agil.model.tasks.TaskStatus
 import br.andrew.nota.agil.model.tasks.TaskTypes
@@ -24,8 +28,12 @@ class TaskService(
     val taskRepository: TaskRepository,
     val documentoService: DocumentService,
     val qiveApi : QiveApiClient,
-
+    private val consultaErpService: ConsultaErpService,
+    private val sapNotas: SapNotasEntradaClient,
+    private val qivePdf: QivePdfLocator,
 ) {
+    private val log = org.slf4j.LoggerFactory.getLogger(javaClass)
+
     fun updateStatus(id: String, newStatus: TaskStatus): Task {
         val task = taskRepository.findById(id)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Task $id nao encontrada") }
@@ -41,6 +49,15 @@ class TaskService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, e.message, e)
         }
 
+        // ConsultaErp com entrega ao SE esgotada (RETORNO_FALHOU): reativa o protocolo ANTES de a
+        // task voltar a READY, para o job nunca ver READY com o protocolo ainda esgotado. Pausa
+        // manual comum (protocolo em outro status) segue so com a troca de status.
+        if (task.taskType == TaskTypes.ConsultaErp && newStatus == TaskStatus.READY) {
+            task.consultaErp?.let { consulta ->
+                consultaErpService.reativarRetorno(consulta.id)?.let { task.consultaErp = ConsultaErpListItem.from(it) }
+            }
+        }
+
         return taskRepository.save(task)
     }
 
@@ -49,10 +66,21 @@ class TaskService(
             return
         }
 
+        if (task.taskType == TaskTypes.ConsultaErp) {
+            if (task.status != TaskStatus.READY) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Marque a task como READY antes de executar")
+            }
+            val consulta = task.consultaErp ?: throw ResponseStatusException(HttpStatus.CONFLICT, "Task ERP sem protocolo")
+            consultaErpService.executar(consulta.id)
+            return
+        }
+
         if(task.taskType == TaskTypes.CreateTask)
             executaCreateTask(task)
         if(task.taskType == TaskTypes.UploadPdf)
             executaUploadTask(task)
+        if(task.taskType == TaskTypes.UploadPdfErp)
+            executaUploadErpTask(task)
     }
 
     private fun executaCreateTask(task : Task){
@@ -64,15 +92,17 @@ class TaskService(
         val dadosFluxo = workFlowService.instanciaFluxo(
             flow.idProcess,
             duplicata.getTitulo(),
-            duplicata.getSoftexpertMap(flow.tableName)
+            duplicata.getSoftexpertMap(flow.tableName, flow.campoSerie, flow.campoChaveAcesso)
         )
         if(dadosFluxo.status == "SUCCESS"){
             task.recordKey = dadosFluxo.recordKey
             task.recordID = dadosFluxo.recordID
             task.status = TaskStatus.FINISHED
+            val parser = TasksParser(task)
             taskRepository.saveAll(listOf(
                 task,
-                TasksParser(task).toTaskUploadDocument()
+                // Nota importada de ERP: anexo pela UploadPdfErp (Qive -> [SAP: anexo do SAP] -> sem anexo).
+                if (task.notaErp != null) parser.toTaskUploadErp() else parser.toTaskUploadDocument()
             ))
         }else{
             task.status = TaskStatus.FAILED
@@ -117,6 +147,52 @@ class TaskService(
                 task,
             ))
             throw Exception("Erro ao mover a tarefa. ${dadosFluxo.detail}")
+        }
+    }
+
+    /**
+     * Anexo de nota importada de ERP. Diferente da [executaUploadTask] (so Qive pelo id, falha sem PDF):
+     * 1. Qive ([QivePdfLocator]): pela chave de acesso ou procurando a nota recebida (prestador + numero);
+     * 2. so SAP: PDF anexado a nota no SAP (Attachments2, via sap-rovema). Dealer nao tem este passo;
+     * 3. nada encontrado: segue SEM anexo, so executando a atividade no SE.
+     * Falha no SE (gravar documento, associar ou executar a atividade) continua marcando FAILED.
+     */
+    private fun executaUploadErpTask(task: Task) {
+        if(task.status != TaskStatus.READY)
+            throw Exception("Nao é permitido reexecutar tasks. ${task.id}")
+        val duplicata = task.duplicata ?: throw Exception("Duplicata nao pode ser null")
+        val workflowId = task.recordID ?: throw Exception("Nao é possivel fazer upload sem workflowID")
+
+        val (origem, pdf) = qivePdf.buscar(duplicata)?.let { "QIVE" to it }
+            ?: pdfDoSap(task)?.let { "SAP" to it }
+            ?: ("NENHUM" to null)
+
+        try {
+            if (pdf != null) {
+                val documento = documentoService.save(pdf, task.name, flow.docCategory)
+                val documentoId = documento?.recordID ?: throw Exception("Nao e possivel associar documento pois o ID do retorno essta null")
+                workFlowService.associa(flow.idAtividadeUpload, workflowId, documentoId)
+            }
+            val dadosFluxo = workFlowService.executaAtividade(workflowId, flow.idAtividadeUpload)
+            if (dadosFluxo.status != "SUCCESS") throw Exception("Erro ao mover a tarefa. ${dadosFluxo.detail}")
+        } catch (e: Exception) {
+            task.status = TaskStatus.FAILED
+            taskRepository.save(task)
+            throw e
+        }
+        task.origemAnexo = origem
+        task.status = TaskStatus.FINISHED
+        taskRepository.save(task)
+    }
+
+    private fun pdfDoSap(task: Task): ByteArray? {
+        val nota = task.notaErp?.takeIf { it.erp == Erp.SAP } ?: return null
+        val docEntry = nota.id.toIntOrNull() ?: return null
+        return try {
+            sapNotas.anexoPdf(docEntry, nota.cnpjFilial)
+        } catch (e: Exception) {
+            log.warn("PDF da nota nao obtido no SAP ({}); seguindo sem anexo", e.javaClass.simpleName)
+            null
         }
     }
 }
