@@ -9,6 +9,8 @@ import br.andrew.nota.agil.model.tasks.TaskTypes
 import br.andrew.nota.agil.qive.interfaces.QiveApiClient
 import br.andrew.nota.agil.repository.JobStateRepository
 import br.andrew.nota.agil.repository.TaskRepository
+import br.andrew.nota.agil.services.NotasErpService
+import br.andrew.nota.agil.services.TravaNotas
 import br.andrew.nota.agil.scheduling.core.NfReciveGeneric
 import org.springframework.scheduling.TaskScheduler
 import java.time.Duration
@@ -20,6 +22,7 @@ class CteReciveSchedule(
     jobsConfiguration: JobsConfiguration,
     val taskRepository: TaskRepository,
     val service: QiveApiClient,
+    val trava: TravaNotas,
 ) : NfReciveGeneric(
     task,
     company,
@@ -46,19 +49,19 @@ class CteReciveSchedule(
                     TaskTypes.CreateTask,
                     duplicata,
                 )
-                if (taskRepository.findById(task.id).isEmpty) {
-                    taskRepository.save(task)
-                }
+                // insert (nunca save) dentro da trava: nao sobrescreve task de ERP de mesmo id nem cria
+                // outra para nota ja importada de ERP (SAP/Dealer, com outro id).
+                NotasErpService.criarTaskDoQive(taskRepository, trava, task)
             }
             cursor = resposta.page?.getNextCursor() ?: cursor++
             state.cursor = cursor
-            jobStateRepository.save(state)
+            salvarProgresso(state)
         } while (!(resposta.page?.isEnd() ?: true))
 
         println("job executado para ${company.nome}")
 
         state.lastFrom = toDate.toInstant()
         state.cursor = 0
-        jobStateRepository.save(state)
+        salvarProgresso(state)
     }
 }

@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+FROM eclipse-temurin:21-jdk AS dependencies
+WORKDIR /workspace/app
+COPY . .
+# Aquece dependencias sem copiar os properties locais para a imagem.
+RUN --mount=type=cache,id=nota-agil-hmg-gradle,target=/root/.gradle,sharing=locked \
+    bash gradlew bootJar --no-daemon && cp -a /root/.gradle /opt/gradle-cache
+
+FROM eclipse-temurin:21-jdk
+WORKDIR /workspace/app
+COPY --from=dependencies /workspace/app/ /workspace/app/
+# O volume Gradle recebe o cache aquecido no primeiro uso.
+COPY --from=dependencies /opt/gradle-cache/ /root/.gradle/
+COPY docker/dev/run.sh /opt/nota-agil/run.sh
+EXPOSE 8080
+ENTRYPOINT ["bash", "/opt/nota-agil/run.sh"]

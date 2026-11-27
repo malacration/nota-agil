@@ -6,4 +6,5 @@ enum class JobsTypes {
     NfseReceived,
     CteReceived,
     SendWorkFlow,
+    ConsultaErp,
 }

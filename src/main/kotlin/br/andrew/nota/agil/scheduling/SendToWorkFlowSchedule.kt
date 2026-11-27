@@ -11,6 +11,7 @@ import br.andrew.nota.agil.infrastructure.JobsConfiguration
 import org.springframework.scheduling.TaskScheduler
 import org.springframework.stereotype.Component
 import java.time.Duration
+import org.slf4j.LoggerFactory
 
 
 @Component
@@ -32,7 +33,11 @@ class SendToWorkFlowSchedule(
         val tasks = taskRepository.findAllByStatus(TaskStatus.READY)
         println("Encontrado ${tasks.size} pendens de envio")
         tasks.forEach {
-            taskService.executa(it)
+            try {
+                taskService.executa(it)
+            } catch (error: Exception) {
+                LoggerFactory.getLogger(javaClass).warn("Falha ao executar task {}: {}", it.id, error.message)
+            }
         }
         println("Finalizando job de envio de tasks")
     }

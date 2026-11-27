@@ -26,10 +26,13 @@ import org.mockito.Mockito.`when`
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.util.Optional
+import br.andrew.nota.agil.model.erp.*
+import java.math.BigDecimal
 
 class TaskServiceTest {
 
     private val repository = mock(TaskRepository::class.java)
+    private val consultaErp = mock(ConsultaErpService::class.java)
     private val service = TaskService(
         flow = WorkFlowEnvrioment("process", "table", "doc", "atividade"),
         workFlowService = WorkFlowService(
@@ -45,7 +48,25 @@ class TaskServiceTest {
             mock(Nfse::class.java),
             mock(Cte::class.java),
         ),
+        consultaErpService = consultaErp,
+        sapNotas = mock(br.andrew.nota.agil.erp.sap.SapNotasEntradaClient::class.java),
+        qivePdf = mock(QivePdfLocator::class.java),
     )
+
+    @Test
+    fun `execucao existente deve encaminhar task ERP para o protocolo correto`() {
+        val protocolo = ConsultaErpTask("protocolo", RegistrarConsultaErpRequest("WF1", "sol1", "12345678000190",
+            "98765432000100", "001", BigDecimal.TEN), "atividade", 1, 2, "tabela")
+        val task = Task("protocolo-ConsultaErp", "Pagamento", TaskStatus.READY, TaskTypes.ConsultaErp)
+            .also { it.consultaErp = ConsultaErpListItem.from(protocolo) }
+        service.executa(task)
+        verify(consultaErp).executar("protocolo")
+        task.status = TaskStatus.FAILED
+        assertThrows<ResponseStatusException> { service.executa(task) }
+        task.status = TaskStatus.FINISHED
+        service.executa(task)
+        verify(consultaErp, org.mockito.Mockito.times(1)).executar("protocolo")
+    }
 
     @Test
     fun `deve alterar task de FAILED para READY`() {
@@ -83,5 +104,43 @@ class TaskServiceTest {
 
         assertEquals(HttpStatus.NOT_FOUND, erro.statusCode)
         assertFalse(erro.reason.isNullOrBlank())
+    }
+
+    private val protocolo = ConsultaErpTask("protocolo", RegistrarConsultaErpRequest("WF1", "sol1", "12345678000190",
+        "98765432000100", "001", BigDecimal.TEN), "atividade", 1, 2, "tabela")
+
+    @Test
+    fun `READY manual em ConsultaErp com entrega esgotada reativa o protocolo antes de salvar`() {
+        val esgotado = protocolo.copy(status = StatusConsultaErp.RETORNO_FALHOU, ultimoErro = "esgotada")
+        val task = Task("protocolo-ConsultaErp", "Pagamento", TaskStatus.FAILED, TaskTypes.ConsultaErp)
+            .also { it.consultaErp = ConsultaErpListItem.from(esgotado) }
+        `when`(repository.findById(task.id)).thenReturn(Optional.of(task))
+        `when`(repository.save(task)).thenReturn(task)
+        val reativado = esgotado.copy(status = StatusConsultaErp.RETORNO_PENDENTE)
+        `when`(consultaErp.reativarRetorno("protocolo")).thenReturn(reativado)
+
+        val salva = service.updateStatus(task.id, TaskStatus.READY)
+
+        val ordem = org.mockito.Mockito.inOrder(consultaErp, repository)
+        ordem.verify(consultaErp).reativarRetorno("protocolo")
+        ordem.verify(repository).save(task)
+        assertEquals(TaskStatus.READY, salva.status)
+        assertEquals(StatusConsultaErp.RETORNO_PENDENTE, salva.consultaErp!!.status)
+    }
+
+    @Test
+    fun `READY manual em ConsultaErp apenas pausado nao altera o protocolo`() {
+        val task = Task("protocolo-ConsultaErp", "Pagamento", TaskStatus.FAILED, TaskTypes.ConsultaErp)
+            .also { it.consultaErp = ConsultaErpListItem.from(protocolo) }
+        `when`(repository.findById(task.id)).thenReturn(Optional.of(task))
+        `when`(repository.save(task)).thenReturn(task)
+        `when`(consultaErp.reativarRetorno("protocolo")).thenReturn(null)
+
+        val salva = service.updateStatus(task.id, TaskStatus.READY)
+
+        assertEquals(TaskStatus.READY, salva.status)
+        assertEquals(StatusConsultaErp.PENDENTE, salva.consultaErp!!.status)
+        service.updateStatus(task.id, TaskStatus.FAILED)
+        verify(consultaErp, org.mockito.Mockito.times(1)).reativarRetorno("protocolo")
     }
 }

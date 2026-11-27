@@ -52,8 +52,13 @@ data class ConhecimentoTransporte(
             getNumero() ?: throw Exception("Nao foi possivel obter numero do CTe"),
             TipoDuplicata.Cte,
             chaveAcesso = id,
+            serie = getSerie(),
         )
     }
+
+    /** ide/serie do CTe; a chave de acesso traz a mesma serie com 3 digitos. */
+    fun getSerie(): String? =
+        (infCte?.ide?.serie ?: textAt(infCteNode, "ide", "serie"))?.trim()?.takeIf { it.isNotEmpty() }
 
     fun getDataEmissao(): Date? {
         val s = infCte?.ide?.dhEmi ?: return null
@@ -240,6 +245,7 @@ data class CteInf(
 data class CteIde(
     val dhEmi: String? = null,
     val nCT: String? = null,
+    val serie: String? = null,
     val toma3: CteToma3? = null,
 )
 

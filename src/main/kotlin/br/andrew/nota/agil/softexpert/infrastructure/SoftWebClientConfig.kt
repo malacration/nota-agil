@@ -3,6 +3,7 @@ package br.andrew.nota.agil.softexpert.infrastructure
 import br.andrew.nota.agil.softexpert.infrastructure.SoftExpertConfiguration
 import br.andrew.nota.agil.softexpert.infrastructure.interfaces.SoftexpertApiClient
 import br.andrew.nota.agil.softexpert.infrastructure.interfaces.Workflow
+import br.andrew.nota.agil.softexpert.infrastructure.interfaces.SoftExpertConsultaSoap
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -54,6 +55,13 @@ class SoftexpertWebClientConfig {
 
         return SoftexpertApiClient(workflow)
     }
+
+    @Bean
+    fun softexpertConsultaSoap(@Qualifier("softexpertRest") rc: RestClient): SoftExpertConsultaSoap =
+        HttpServiceProxyFactory.builder()
+            .exchangeAdapter(RestClientAdapter.create(rc))
+            .build()
+            .createClient(SoftExpertConsultaSoap::class.java)
 
     private fun insecureRequestFactory(): ClientHttpRequestFactory {
         val trustAll = object : X509TrustManager {
